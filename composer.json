@@ -29,7 +29,7 @@
     }
   },
   "suggest": {
-    "league/flysystem": "To use the FlysystemFileOutput",
-    "symfony/filesystem": "To use the SymfonyFileOutput"
+    "league/flysystem": "To use the FlysystemFileOutput (NYI)",
+    "symfony/filesystem": "To use the SymfonyFileOutput (NYI)"
   }
 }
