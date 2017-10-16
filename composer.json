@@ -3,12 +3,12 @@
   "description": "Helper Classes for Symfony Console",
   "type": "library",
   "require": {
-    "symfony/console": "^3.3"
+    "symfony/console": "^2.7|^3.3"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.4",
     "league/flysystem": "^1.0",
-    "symfony/filesystem": "^3.3"
+    "symfony/filesystem": "^2.7|^3.3"
   },
   "license": "MIT",
   "authors": [
