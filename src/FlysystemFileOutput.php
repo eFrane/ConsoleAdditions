@@ -14,6 +14,11 @@ use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 
 /**
  * Class FlysystemFileOutput
+ *
+ * Use Flysystem Adapters for file access
+ *
+ * Requires `tmpfile()`.
+ *
  * @package EFrane\ConsoleAdditions
  */
 class FlysystemFileOutput extends FileOutput
