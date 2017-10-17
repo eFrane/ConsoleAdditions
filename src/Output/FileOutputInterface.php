@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-namespace EFrane\ConsoleAdditions;
+namespace EFrane\ConsoleAdditions\Output;
 
 
 /**

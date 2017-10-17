@@ -7,8 +7,8 @@
 namespace Tests\Unit;
 
 
-use EFrane\ConsoleAdditions\MultiplexedOutput;
-use EFrane\ConsoleAdditions\NativeFileOutput;
+use EFrane\ConsoleAdditions\Output\MultiplexedOutput;
+use EFrane\ConsoleAdditions\Output\NativeFileOutput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Tests\TestCase;

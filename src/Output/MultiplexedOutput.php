@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-namespace EFrane\ConsoleAdditions;
+namespace EFrane\ConsoleAdditions\Output;
 
 use EFrane\ConsoleAdditions\Exception\MultiplexedOutputException;
 use Symfony\Component\Console\Formatter\OutputFormatter;

@@ -4,7 +4,7 @@
  * @author Stefan "eFrane" Graupner <stefan.graupner@gmail.com>
  */
 
-namespace EFrane\ConsoleAdditions;
+namespace EFrane\ConsoleAdditions\Output;
 
 
 use EFrane\ConsoleAdditions\Exception\FileOutputException;

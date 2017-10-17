@@ -7,7 +7,7 @@
 namespace Tests\Unit;
 
 
-use EFrane\ConsoleAdditions\FlysystemFileOutput;
+use EFrane\ConsoleAdditions\Output\FlysystemFileOutput;
 use League\Flysystem\Adapter\NullAdapter;
 use League\Flysystem\Filesystem;
 use Tests\TestCase;
