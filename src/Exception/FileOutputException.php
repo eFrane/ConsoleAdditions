@@ -2,6 +2,7 @@
 /**
  * @copyright 2017
  * @author Stefan "eFrane" Graupner <stefan.graupner@gmail.com>
+ * @license MIT
  */
 
 namespace EFrane\ConsoleAdditions\Exception;
@@ -16,6 +17,6 @@ class FileOutputException extends \RuntimeException
 
     public static function failedToOpenFileForWriting($filename)
     {
-        return new self("Failed to open '{$filename}' for writing");
+        return new self("Failed to open '{$filename}' for writing.");
     }
 }

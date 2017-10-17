@@ -2,6 +2,7 @@
 /**
  * @copyright 2017
  * @author Stefan "eFrane" Graupner <stefan.graupner@gmail.com>
+ * @license MIT
  */
 
 namespace EFrane\ConsoleAdditions;
@@ -11,8 +12,33 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class MultiplexedOutput
+ *
+ * Send output to multiple destinations. `MultiplexedOutput` will
+ * forward all `OutputInterface` methods that change state to
+ * all registered interfaces. Thus it makes it possible to send
+ * output to as many places as required.
+ *
+ * This can be useful to for instance log output of complex
+ * console commands by combining a `ConsoleOutput` with a `FileOutput`.
+ *
+ * **Any** interface added to a multiplexed output will inherit the
+ * following properties from the multiplexer:
+ *
+ * - Verbosity
+ * - Output Formatter
+ * - Decoration State
+ *
+ * This also applies when changing any of these after instantiation.
+ *
+ * @package EFrane\ConsoleAdditions
+ */
 class MultiplexedOutput implements OutputInterface
 {
+    /**
+     * @var int verbosity
+     */
     protected $verbosity = self::VERBOSITY_NORMAL;
 
     /**
@@ -144,6 +170,10 @@ class MultiplexedOutput implements OutputInterface
     public function setDecorated($decorated)
     {
         $this->formatter->setDecorated($decorated);
+
+        foreach ($this->interfaces as $interface) {
+            $interface->getFormatter()->setDecorated($decorated);
+        }
     }
 
     /**
