@@ -62,6 +62,8 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
         OutputFormatterInterface $formatter = null
     ) {
         $this->writeMode = $writeMode;
+        $this->filename = $filename;
+
         $stream = $this->loadFileStream($filename);
 
         parent::__construct($stream, $verbosity, $decorated, $formatter);

@@ -11,8 +11,7 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^6.4",
-    "league/flysystem": "^1.0",
-    "symfony/filesystem": "^2.7|^3.3"
+    "league/flysystem": "^1.0"
   },
   "license": "MIT",
   "authors": [
@@ -33,7 +32,6 @@
     }
   },
   "suggest": {
-    "league/flysystem": "To use the FlysystemFileOutput (NYI)",
-    "symfony/filesystem": "To use the SymfonyFileOutput (NYI)"
+    "league/flysystem": "To use the FlysystemFileOutput"
   }
 }
