@@ -8,7 +8,7 @@
 namespace Tests;
 
 /**
- * Base test class for PHPGObject tests
+ * Base test class
  */
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
