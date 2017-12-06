@@ -2,7 +2,7 @@
 /**
  * @copyright 2017
  * @author Stefan "eFrane" Graupner <stefan.graupner@gmail.com>
- * @license GPL
+ * @license MIT
  */
 
 namespace Tests;
