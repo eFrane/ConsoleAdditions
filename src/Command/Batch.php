@@ -16,7 +16,26 @@ use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class Batch
+ * Batch
+ *
+ * This class offers batching commands of a Symfony Console Application. This can be
+ * useful when writing things like deployment or update scripts as console commands
+ * which call many other commands in a set order e.g. cache updating, database
+ * migrations, etc.
+ *
+ * Usage in a `Command::execute`:
+ *
+ * <code>
+ * Batch::create($this->getApplication(), $output)
+ *     ->add('my:command --with-option')
+ *     ->add('my:other:command for-this-input')
+ *     ->run();
+ * </code>
+ *
+ * Exceptions occurring in commands are cascaded upwards. It is also possible to
+ * just use this as a command string parser by creating an instance and calling
+ * `$command = $batch->createCommandFromString('my:command --with -a --weird signature', $input);`
+ *
  * @package EFrane\ConsoleAdditions\Command
  */
 class Batch

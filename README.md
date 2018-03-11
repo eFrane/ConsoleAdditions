@@ -2,6 +2,22 @@
 
 Tools to make working with Symfony Console even more awesome.
 
+## `Batch`
+
+This class offers batching commands of a Symfony Console Application. This can be
+useful when writing things like deployment or update scripts as console commands
+which call many other commands in a set order e.g. cache updating, database
+migrations, etc.
+
+Usage in a `Command::execute`:
+
+```php
+\EFrane\ConsoleAdditions\Command\Batch::create($this->getApplication(), $output)
+    ->add('my:command --with-option')
+    ->add('my:other:command for-this-input')
+    ->run();
+```
+
 ## Output
 
 This Package offers additional console output interfaces:
