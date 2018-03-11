@@ -63,7 +63,11 @@ class BatchTest extends TestCase
     public function testBatchRunOne()
     {
         $sut = new Batch($this->app, $this->output);
-        $sut->runOne('list');
+
+        try {
+            $sut->runOne('list');
+        } catch (\Exception $e) {
+        }
 
         $expected = <<<HD
 Console Tool
@@ -101,7 +105,11 @@ HD;
             'list',
             'list',
         ]);
-        $sut->run();
+
+        try {
+            $sut->run();
+        } catch (\Exception $e) {
+        }
 
         $expected = <<<HD
 Console Tool
@@ -153,9 +161,38 @@ HD;
         $this->assertEquals(1, count($sut->getCommands()));
         $this->assertInternalType('array', $sut->getCommands()[0]);
 
-        $sut->run();
+        try {
+            $sut->run();
+        } catch (\Exception $e) {
+        }
 
         $this->assertEquals('Hello Test', $this->getOutput());
+    }
+
+    /**
+     * @expectedException \EFrane\ConsoleAdditions\Exception\BatchException
+     */
+    public function testAddThrowsOnObject()
+    {
+        $this->app->add(new TestCommand());
+
+        $sut = new Batch($this->app, $this->output);
+        $sut->add($this->app->get('test'));
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Testing exception cascading
+     * @throws \Exception
+     */
+    public function testRunCascadesCommandException()
+    {
+        $this->app->add(new TestCommand());
+
+        $sut = new Batch($this->app, $this->output);
+        $sut->add('test --throw-exception');
+
+        $sut->run();
     }
 }
 
@@ -164,11 +201,16 @@ final class TestCommand extends Command
     public function configure()
     {
         $this->setName('test');
+        $this->addOption('throw-exception');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $output->write('Hello Test');
+
+        if ($input->getOption('throw-exception')) {
+            throw new \RuntimeException("Testing exception cascading");
+        }
 
         return 0;
     }
