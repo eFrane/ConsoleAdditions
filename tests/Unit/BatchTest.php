@@ -12,13 +12,24 @@ use EFrane\ConsoleAdditions\Command\EchoCommand;
 use EFrane\ConsoleAdditions\Output\FileOutput;
 use EFrane\ConsoleAdditions\Output\NativeFileOutput;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Tests\TestCase;
 
 class BatchTest extends TestCase
 {
     const TEST_OUTPUT_FILENAME = 'testfile.log';
 
+    /**
+     * @var Application
+     */
     protected $app;
+
+    /**
+     * @var FileOutput
+     */
     protected $output;
 
     public function setUp()
@@ -132,5 +143,32 @@ Available commands:
 HD;
 
         $this->assertEquals($expected, $this->getOutput());
+    }
+
+    public function testAddObject()
+    {
+        $this->app->add(new TestCommand());
+
+        $sut = new Batch($this->app, $this->output);
+        $sut->addObject($this->app->get('test'), new ArrayInput([]));
+        $this->assertEquals(1, count($sut->getCommands()));
+        $this->assertInternalType('array', $sut->getCommands()[0]);
+
+        $sut->run();
+
+        $this->assertEquals('Hello Test', $this->getOutput());
+    }
+}
+
+final class TestCommand extends Command {
+    public function configure()
+    {
+        $this->setName('test');
+    }
+
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $output->write('Hello Test');
+        return 0;
     }
 }

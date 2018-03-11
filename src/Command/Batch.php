@@ -8,7 +8,10 @@
 namespace EFrane\ConsoleAdditions\Command;
 
 
+use EFrane\ConsoleAdditions\Exception\BatchException;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -76,7 +79,16 @@ class Batch
      */
     public function add($commandWithSignature)
     {
+        if (!is_string($commandWithSignature)) {
+            throw BatchException::signatureExpected($commandWithSignature);
+        }
+
         array_push($this->commands, $commandWithSignature);
+    }
+
+    public function addObject(Command $command, InputInterface $input)
+    {
+        array_push($this->commands, compact('command', 'input'));
     }
 
     /**
@@ -84,19 +96,44 @@ class Batch
      */
     public function run()
     {
+        if ($this->output->isVerbose()) {
+            $commandCount = count($this->commands);
+            $this->output->writeln("Running {$commandCount} commands...");
+        }
+
         $returnValue = 0;
 
         foreach ($this->commands as $command) {
             $returnValue &= $this->runOne($command);
         }
+
+        return $returnValue;
     }
 
     /**
-     * @param $commandWithSignature
+     * @param string              $command
+     * @param InputInterface|null $input
      * @return int
      * @throws \Exception
      */
-    public function runOne($commandWithSignature)
+    public function runOne($command, InputInterface $input = null)
+    {
+        if (is_array($command)) {
+            extract($command);
+        }
+
+        if (is_string($command)) {
+            $command = $this->createCommandFromString($command, $input);
+        }
+
+        if (is_null($input)) {
+            throw BatchException::inputMustNotBeNull();
+        }
+
+        return $command->run($input, $this->output);
+    }
+
+    protected function createCommandFromString($commandWithSignature, InputInterface &$input = null)
     {
         $commandName = explode(' ', $commandWithSignature, 2)[0];
 
@@ -104,6 +141,6 @@ class Batch
 
         $input = new StringInput($commandWithSignature);
 
-        return $command->run($input, $this->output);
+        return $command;
     }
 }
