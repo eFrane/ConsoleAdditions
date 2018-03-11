@@ -1,7 +1,8 @@
 <?php
 /**
  * @copyright 2017
- * @author Stefan "eFrane" Graupner <stefan.graupner@gmail.com>
+ * @author Stefan "eFrane" Graupner <efrane@meanderingsoul.com>
+ * @license MIT
  */
 
 namespace EFrane\ConsoleAdditions\Output;

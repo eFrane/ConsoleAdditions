@@ -2,6 +2,7 @@
 /**
  * @copyright 2018
  * @author Stefan "eFrane" Graupner <stefan.graupner@gmail.com>
+ * @license MIT
  */
 
 namespace EFrane\ConsoleAdditions\Exception;

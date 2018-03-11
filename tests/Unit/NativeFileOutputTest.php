@@ -1,7 +1,7 @@
 <?php
 /**
  * @copyright 2017
- * @author Stefan "eFrane" Graupner <stefan.graupner@gmail.com>
+ * @author Stefan "eFrane" Graupner <efrane@meanderingsoul.com>
  */
 
 namespace Tests\Unit;
@@ -51,7 +51,7 @@ class NativeFileOutputTest extends TestCase
         $expectedLines = [
             'message1',
             'message2',
-            ''
+            '',
         ];
 
         $this->assertCount(3, $lines);
@@ -75,6 +75,6 @@ class NativeFileOutputTest extends TestCase
      */
     public function testReportsIncorrectWriteMode()
     {
-        $sut = new NativeFileOutput(self::TESTFILENAME, 512);
+        new NativeFileOutput(self::TESTFILENAME, 512);
     }
 }

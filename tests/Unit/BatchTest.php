@@ -1,14 +1,13 @@
 <?php
 /**
  * @copyright 2018
- * @author Stefan "eFrane" Graupner <stefan.graupner@gmail.com>
+ * @author Stefan "eFrane" Graupner <efrane@meanderingsoul.com>
  */
 
 namespace Tests\Unit;
 
 
 use EFrane\ConsoleAdditions\Command\Batch;
-use EFrane\ConsoleAdditions\Command\EchoCommand;
 use EFrane\ConsoleAdditions\Output\FileOutput;
 use EFrane\ConsoleAdditions\Output\NativeFileOutput;
 use Symfony\Component\Console\Application;
@@ -66,7 +65,7 @@ class BatchTest extends TestCase
         $sut = new Batch($this->app, $this->output);
         $sut->runOne('list');
 
-        $expected =<<<HD
+        $expected = <<<HD
 Console Tool
 
 Usage:
@@ -160,7 +159,8 @@ HD;
     }
 }
 
-final class TestCommand extends Command {
+final class TestCommand extends Command
+{
     public function configure()
     {
         $this->setName('test');
@@ -169,6 +169,7 @@ final class TestCommand extends Command {
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $output->write('Hello Test');
+
         return 0;
     }
 }
