@@ -42,6 +42,11 @@ class Batch
         $this->application = $application;
     }
 
+    public static function create(Application $application, OutputInterface $output)
+    {
+        return new self($application, $output);
+    }
+
     /**
      * @return OutputInterface
      */
