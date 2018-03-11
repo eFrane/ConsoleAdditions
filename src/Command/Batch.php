@@ -148,7 +148,7 @@ class Batch
         return $command->run($input, $this->output);
     }
 
-    protected function createCommandFromString($commandWithSignature, InputInterface &$input = null)
+    public function createCommandFromString($commandWithSignature, InputInterface &$input = null)
     {
         $commandName = explode(' ', $commandWithSignature, 2)[0];
 
