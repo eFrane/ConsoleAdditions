@@ -81,6 +81,7 @@ class Batch
 
     /**
      * @param string $commandWithSignature
+     * @return $this;
      */
     public function add($commandWithSignature)
     {
@@ -89,11 +90,20 @@ class Batch
         }
 
         array_push($this->commands, $commandWithSignature);
+
+        return $this;
     }
 
+    /**
+     * @param Command        $command
+     * @param InputInterface $input
+     * @return $this
+     */
     public function addObject(Command $command, InputInterface $input)
     {
         array_push($this->commands, compact('command', 'input'));
+
+        return $this;
     }
 
     /**
