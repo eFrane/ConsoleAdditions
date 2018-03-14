@@ -4,10 +4,10 @@ Tools to make working with Symfony Console even more awesome.
 
 ## Installation
 
-This package is available on [Packagist](https://packagist.org/efrane/symfony-console-additions):
+This package is available on [Packagist](https://packagist.org/efrane/console-additions):
 
 ```bash
-composer require efrane/symfony-console-additions
+composer require efrane/console-additions
 ```
 
 ## The Additions
