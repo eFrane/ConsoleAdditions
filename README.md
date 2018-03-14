@@ -2,7 +2,17 @@
 
 Tools to make working with Symfony Console even more awesome.
 
-## `Batch`
+## Installation
+
+This package is available on [Packagist](https://packagist.org/efrane/symfony-console-additions):
+
+```bash
+composer require efrane/symfony-console-additions
+```
+
+## The Additions
+
+### `Batch`
 
 This class offers batching commands of a Symfony Console Application. This can be
 useful when writing things like deployment or update scripts as console commands
@@ -18,11 +28,11 @@ Usage in a `Command::execute`:
     ->run();
 ```
 
-## Output
+### Output
 
 This Package offers additional console output interfaces:
 
-### `FileOutput`
+#### `FileOutput`
 
 FileOutputs write all their data to a file stream and come in to concrete flavours:
 
@@ -34,7 +44,7 @@ FileOutputs write all their data to a file stream and come in to concrete flavou
   `league/flysystem`-Adapter, thus being able to send that data to any Flysystem-supported
   destination, i.e. S3, Dropbox, FTP, etc.
 
-### `MultiplexedOutput`
+#### `MultiplexedOutput`
 
 MultiplexedOutput can be used to combine multiple output interfaces to act as one.
 This is the logical companion of file outputs since usually one would probably
