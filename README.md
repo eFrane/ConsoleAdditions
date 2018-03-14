@@ -1,3 +1,8 @@
+[![Build Status](https://travis-ci.org/eFrane/SymfonyConsoleAdditions.svg?branch=master)](https://travis-ci.org/eFrane/SymfonyConsoleAdditions)
+[![Latest Stable Version](https://poser.pugx.org/efrane/console-additions/v/stable)](https://packagist.org/packages/efrane/console-additions)
+[![Latest Unstable Version](https://poser.pugx.org/efrane/console-additions/v/unstable)](https://packagist.org/packages/efrane/console-additions)
+[![License](https://poser.pugx.org/efrane/console-additions/license)](https://packagist.org/packages/efrane/console-additions)
+
 # Console Additions
 
 Tools to make working with Symfony Console even more awesome.
