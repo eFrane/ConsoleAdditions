@@ -130,7 +130,7 @@ class Batch
      */
     public function run()
     {
-        if ($this->output->isVerbose()) {
+        if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
             $commandCount = count($this->commands);
             $this->output->writeln("Running {$commandCount} commands...");
         }
