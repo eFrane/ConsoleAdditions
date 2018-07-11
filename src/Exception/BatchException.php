@@ -19,4 +19,10 @@ class BatchException extends \RuntimeException
     {
         return new self('Expected command name with signature, got a value of type ' . gettype($commandWithSignature));
     }
+
+    public static function commandArrayFormatMismatch(array $commandArray) {
+        $arrayKeyList = implode(', ', array_keys($commandArray));
+
+        return new self("Expected array with keys 'command' and 'input', instead got these keys: {$arrayKeyList}");
+    }
 }

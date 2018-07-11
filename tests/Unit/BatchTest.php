@@ -161,10 +161,10 @@ HD;
         $this->assertEquals(1, count($sut->getCommands()));
         $this->assertInternalType('array', $sut->getCommands()[0]);
 
-        try {
+        // try {
             $sut->run();
-        } catch (\Exception $e) {
-        }
+        // } catch (\Exception $e) {
+        // }
 
         $this->assertEquals('Hello Test', $this->getOutput());
     }
@@ -193,6 +193,17 @@ HD;
         $sut->add('test --throw-exception');
 
         $sut->run();
+    }
+
+    /**
+     * @expectedException \EFrane\ConsoleAdditions\Exception\BatchException
+     */
+    public function testRunOneThrowsOnInvalidArray()
+    {
+        $this->app->add(new TestCommand());
+
+        $sut = new Batch($this->app, $this->output);
+        $sut->runOne(['invalid' => 41, 'key' => 22]);
     }
 }
 

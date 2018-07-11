@@ -145,14 +145,19 @@ class Batch
     }
 
     /**
-     * @param string              $command
+     * @param string|array        $command
      * @param InputInterface|null $input
      * @return int
      * @throws \Exception
      */
     public function runOne($command, InputInterface $input = null)
     {
-        if (is_array($command)) {
+        if (is_array($command)
+        ) {
+            if (array_keys($command) !== ['command', 'input']) {
+                throw BatchException::commandArrayFormatMismatch($command);
+            }
+
             extract($command);
         }
 
