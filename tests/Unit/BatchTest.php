@@ -8,13 +8,16 @@ namespace Tests\Unit;
 
 
 use EFrane\ConsoleAdditions\Command\Batch;
+use EFrane\ConsoleAdditions\Exception\BatchException;
 use EFrane\ConsoleAdditions\Output\FileOutput;
 use EFrane\ConsoleAdditions\Output\NativeFileOutput;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 use Tests\TestCase;
 
 class BatchTest extends TestCase
@@ -205,6 +208,42 @@ HD;
         $sut = new Batch($this->app, $this->output);
         $sut->runOne(['invalid' => 41, 'key' => 22]);
     }
+
+    public function testAddShellAddsProcess()
+    {
+        $sut = new Batch($this->app, $this->output);
+        $sut->addShell('echo "Hello Shell"');
+
+        $this->assertEquals(1, count($sut->getCommands()));
+        $this->assertArrayHasKey('process', $sut->getCommands()[0]);
+        $this->assertInstanceOf(Process::class, $sut->getCommands()[0]['process']);
+    }
+
+    public function testAddShellCbAddsConfiguredProcess()
+    {
+        $sut = new Batch($this->app, $this->output);
+        $sut->addShellCb('echo "Hello Shell"', function (Process $process) {
+            $this->assertEquals('echo "Hello Shell"', $process->getCommandLine());
+            $process->setWorkingDirectory('this/is/a/directory');
+
+            return $process;
+        });
+
+        $this->assertEquals(1, count($sut->getCommands()));
+        $this->assertArrayHasKey('process', $sut->getCommands()[0]);
+        $this->assertInstanceOf(Process::class, $sut->getCommands()[0]['process']);
+        $this->assertEquals('this/is/a/directory', $sut->getCommands()[0]['process']->getWorkingDirectory());
+    }
+
+    public function testRunReturnsShellOutput()
+    {
+        $sut = new Batch($this->app, $this->output);
+        $sut->addShell('echo "My\nShell\nCommand"');
+        $sut->run();
+
+        $this->assertEquals("My\nShell\nCommand\n", $this->getOutput());
+    }
+
     public function testToStringForCommandStrings()
     {
         $sut = new Batch($this->app, $this->output);

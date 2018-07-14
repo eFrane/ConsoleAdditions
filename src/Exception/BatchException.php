@@ -25,4 +25,9 @@ class BatchException extends \RuntimeException
 
         return new self("Expected array with keys 'command' and 'input', instead got these keys: {$arrayKeyList}");
     }
+
+    public static function missingSymfonyProcess()
+    {
+        return new self('Missing Process class, please add `symfony/process` to your composer dependencies to use this function.');
+    }
 }

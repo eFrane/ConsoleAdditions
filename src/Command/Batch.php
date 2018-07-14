@@ -14,6 +14,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 
 /**
  * Batch
@@ -40,6 +41,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Batch
 {
+    const ALLOWED_COMMAND_ARRAY_KEYS = ['command', 'input', 'process'];
+
     /**
      * @var OutputInterface
      */
@@ -114,6 +117,52 @@ class Batch
     }
 
     /**
+     * @param string               $command
+     * @param string               $cwd
+     * @param array                $env
+     * @param resource|string|null $input
+     * @param float                $timeout
+     * @return $this
+     */
+    public function addShell($command, $cwd = null, $env = null, $input = null, $timeout = 60.0)
+    {
+        $this->checkShell();
+
+        $process = new Process($command, $cwd, $env, $input, $timeout);
+        array_push($this->commands, compact('process'));
+
+        return $this;
+    }
+
+    /**
+     * Checks whether symfony/process is available
+     * @throws BatchException
+     */
+    public function checkShell()
+    {
+        if (!class_exists('Symfony\Component\Process\Process')) {
+            throw BatchException::missingSymfonyProcess();
+        }
+    }
+
+    /**
+     * @param string   $cmd
+     * @param callable $configurationCallback (Symfony\Component\Process\Process $process)
+     * @return $this
+     */
+    public function addShellCb($cmd, callable $configurationCallback)
+    {
+        $this->checkShell();
+
+        $process = new Process($cmd);
+        $process = call_user_func($configurationCallback, $process);
+
+        array_push($this->commands, compact('process'));
+
+        return $this;
+    }
+
+    /**
      * @param Command        $command
      * @param InputInterface $input
      * @return $this
@@ -148,13 +197,14 @@ class Batch
      * @param string|array        $command
      * @param InputInterface|null $input
      * @return int
-     * @throws \Exception
+     * @throws \Exception|BatchException
      */
     public function runOne($command, InputInterface $input = null)
     {
         if (is_array($command)
         ) {
-            if (array_keys($command) !== ['command', 'input']) {
+            //  the amount of values in command equals the amount of keys which are in the amount of allowed keys
+            if (count($command) === array_intersect(array_keys($command), self::ALLOWED_COMMAND_ARRAY_KEYS)) {
                 throw BatchException::commandArrayFormatMismatch($command);
             }
 
@@ -165,8 +215,12 @@ class Batch
             $command = $this->createCommandFromString($command, $input);
         }
 
-        if (is_null($input)) {
+        if (is_null($input) && !isset($process)) {
             throw BatchException::inputMustNotBeNull();
+        }
+
+        if (isset($process)) {
+            return $this->runProcess($process);
         }
 
         return $command->run($input, $this->output);
@@ -227,3 +281,22 @@ class Batch
         }, $this->commands));
     }
 
+    /**
+     * @param Process $process
+     * @return int
+     */
+    public function runProcess(Process $process)
+    {
+        $process->mustRun();
+        $process->enableOutput();
+
+        $process->run(function ($type, $out) {
+            // TODO: allow access to process stderr
+            if ('out' === $type) {
+                $this->output->write($out);
+            }
+        });
+
+        return $process->getExitCode();
+    }
+}
