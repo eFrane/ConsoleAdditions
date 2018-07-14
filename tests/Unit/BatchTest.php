@@ -33,7 +33,7 @@ class BatchTest extends TestCase
 
     public function setUp()
     {
-        $this->app = new Application();
+        $this->app = new Application('test');
 
         $this->output = new NativeFileOutput(self::TEST_OUTPUT_FILENAME, FileOutput::WRITE_MODE_RESET);
     }
@@ -70,7 +70,7 @@ class BatchTest extends TestCase
         }
 
         $expected = <<<HD
-Console Tool
+test
 
 Usage:
   command [options] [arguments]
@@ -112,7 +112,7 @@ HD;
         }
 
         $expected = <<<HD
-Console Tool
+test
 
 Usage:
   command [options] [arguments]
@@ -129,7 +129,7 @@ Options:
 Available commands:
   help  Displays help for a command
   list  Lists commands
-Console Tool
+test
 
 Usage:
   command [options] [arguments]
@@ -205,6 +205,28 @@ HD;
         $sut = new Batch($this->app, $this->output);
         $sut->runOne(['invalid' => 41, 'key' => 22]);
     }
+    public function testToStringForCommandStrings()
+    {
+        $sut = new Batch($this->app, $this->output);
+
+        $sut->add('info');
+        $sut->add('help');
+        $sut->add('info');
+
+        $this->assertEquals("test info\ntest help\ntest info", strval($sut));
+    }
+
+    public function testToStringForCommandArrays()
+    {
+        $sut = new Batch($this->app, $this->output);
+
+        $this->app->add(new TestCommand());
+        $testCommand = $this->app->get('test');
+        $sut->addObject($testCommand, new ArrayInput([]));
+        $sut->addObject($testCommand, new ArrayInput(['--throw-exception', 'FancyTestName']));
+
+        $this->assertEquals("test test\ntest test --throw-exception FancyTestName", strval($sut));
+    }
 }
 
 final class TestCommand extends Command
@@ -213,11 +235,12 @@ final class TestCommand extends Command
     {
         $this->setName('test');
         $this->addOption('throw-exception');
+        $this->addArgument('name', InputArgument::OPTIONAL, null, 'Test');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->write('Hello Test');
+        $output->write('Hello ' . $input->getArgument('name'));
 
         if ($input->getOption('throw-exception')) {
             throw new \RuntimeException("Testing exception cascading");

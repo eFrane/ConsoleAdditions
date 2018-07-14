@@ -182,4 +182,48 @@ class Batch
 
         return $command;
     }
-}
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return implode("\n", array_map(function ($command) {
+            $commandAsString = '';
+
+            if (is_string($command)) {
+                $commandAsString = sprintf(
+                    '%s %s',
+                    $this->application->getName(),
+                    $command
+                );
+            }
+
+            if (is_array($command)) {
+                extract($command);
+
+                if (isset($process)) {
+                    /** @var Process $process */
+
+                    $commandAsString = $process->getCommandLine();
+                }
+
+                if (isset($command, $input)) {
+                    /** @var Command $command */
+                    /** @var InputInterface $input */
+
+                    $commandAsString = sprintf(
+                        '%s %s %s',
+                        $this->application->getName(),
+                        $command->getName(),
+                        $input
+//                        implode(' ', $input->getArguments()),
+//                        implode(' ', $input->getOptions())
+                    );
+                }
+            }
+
+            return trim($commandAsString);
+        }, $this->commands));
+    }
+
