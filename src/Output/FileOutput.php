@@ -50,7 +50,7 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
      *
      * @param string                        $filename
      * @param bool|int                      $writeMode
-     * @param bool|int|null                 $verbosity
+     * @param int                           $verbosity
      * @param bool|null                     $decorated
      * @param OutputFormatterInterface|null $formatter
      */

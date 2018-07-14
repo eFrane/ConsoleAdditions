@@ -54,7 +54,7 @@ class FlysystemFileOutput extends FileOutput
     ) {
         $this->filesystem = $filesystem;
 
-        parent::__construct($filename, $verbosity, $decorated, $formatter);
+        parent::__construct($filename, $writeMode, $verbosity, $decorated, $formatter);
     }
 
     /**

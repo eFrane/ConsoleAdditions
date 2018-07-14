@@ -274,7 +274,7 @@ final class TestCommand extends Command
     {
         $this->setName('test');
         $this->addOption('throw-exception');
-        $this->addArgument('name', InputArgument::OPTIONAL, null, 'Test');
+        $this->addArgument('name', InputArgument::OPTIONAL, '', 'Test');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
