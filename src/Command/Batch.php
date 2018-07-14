@@ -238,6 +238,25 @@ class Batch
     }
 
     /**
+     * @param Process $process
+     * @return int
+     */
+    public function runProcess(Process $process)
+    {
+        $process->mustRun();
+        $process->enableOutput();
+
+        $process->run(function ($type, $out) {
+            // TODO: allow access to process stderr
+            if ('out' === $type) {
+                $this->output->write($out);
+            }
+        });
+
+        return $process->getExitCode();
+    }
+
+    /**
      * @return string
      */
     public function __toString()
@@ -271,32 +290,11 @@ class Batch
                         $this->application->getName(),
                         $command->getName(),
                         $input
-//                        implode(' ', $input->getArguments()),
-//                        implode(' ', $input->getOptions())
                     );
                 }
             }
 
             return trim($commandAsString);
         }, $this->commands));
-    }
-
-    /**
-     * @param Process $process
-     * @return int
-     */
-    public function runProcess(Process $process)
-    {
-        $process->mustRun();
-        $process->enableOutput();
-
-        $process->run(function ($type, $out) {
-            // TODO: allow access to process stderr
-            if ('out' === $type) {
-                $this->output->write($out);
-            }
-        });
-
-        return $process->getExitCode();
     }
 }
