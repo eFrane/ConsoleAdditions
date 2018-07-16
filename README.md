@@ -33,6 +33,20 @@ Usage in a `Command::execute`:
     ->run();
 ```
 
+**Shell Commands**
+
+Batches can be an intertwined set of console application and system shell
+commands. This is an advanced feature which requires the `symfony/process`
+package as additional dependency.
+
+Since shell commands internally create `Process` objects, the `Batch` API
+exposes to methods for adding a shell command:
+
+- `addShell` adds the process with the given configuration (see Batch::addShell for details) 
+- `addShellCb(string $cmd, callable $cb)` creates the process and passes it to a callback
+  for further configuration. This is especially useful when the desired command requires
+  some kind of process piping.
+
 ### Output
 
 This Package offers additional console output interfaces:
