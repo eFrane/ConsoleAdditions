@@ -14,7 +14,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
 
 /**
  * Batch
@@ -128,7 +127,7 @@ class Batch
     {
         $this->checkShell();
 
-        $process = new Process($command, $cwd, $env, $input, $timeout);
+        $process = new \Symfony\Component\Process\Process($command, $cwd, $env, $input, $timeout);
         array_push($this->commands, compact('process'));
 
         return $this;
@@ -154,7 +153,7 @@ class Batch
     {
         $this->checkShell();
 
-        $process = new Process($cmd);
+        $process = new \Symfony\Component\Process\Process($cmd);
         $process = call_user_func($configurationCallback, $process);
 
         array_push($this->commands, compact('process'));
@@ -241,7 +240,7 @@ class Batch
      * @param Process $process
      * @return int
      */
-    public function runProcess(Process $process)
+    public function runProcess(\Symfony\Component\Process\Process $process)
     {
         $process->mustRun();
         $process->enableOutput();
