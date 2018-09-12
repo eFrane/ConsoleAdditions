@@ -8,7 +8,6 @@ namespace Tests\Unit;
 
 
 use EFrane\ConsoleAdditions\Command\Batch;
-use EFrane\ConsoleAdditions\Exception\BatchException;
 use EFrane\ConsoleAdditions\Output\FileOutput;
 use EFrane\ConsoleAdditions\Output\NativeFileOutput;
 use Symfony\Component\Console\Application;
@@ -165,7 +164,7 @@ HD;
         $this->assertInternalType('array', $sut->getCommands()[0]);
 
         // try {
-            $sut->run();
+        $sut->run();
         // } catch (\Exception $e) {
         // }
 
@@ -265,6 +264,17 @@ HD;
         $sut->addObject($testCommand, new ArrayInput(['--throw-exception', 'FancyTestName']));
 
         $this->assertEquals("test test\ntest test --throw-exception FancyTestName", strval($sut));
+    }
+
+    public function testAddTransparentVSprintf()
+    {
+        $sut = new Batch($this->app, $this->output);
+
+        $this->app->add(new TestCommand());
+
+        $sut->add('%s', 'test');
+        $this->assertCount(1, $sut->getCommands());
+        $this->assertEquals('test', $sut->getCommands()[0]);
     }
 }
 

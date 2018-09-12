@@ -110,6 +110,13 @@ class Batch
             throw BatchException::signatureExpected($commandWithSignature);
         }
 
+        // transparent vsprintf
+        if (func_num_args() > 1) {
+            $args = func_get_args();
+            array_shift($args);
+            $commandWithSignature = vsprintf($commandWithSignature, $args);
+        }
+
         array_push($this->commands, $commandWithSignature);
 
         return $this;
