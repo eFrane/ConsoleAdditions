@@ -104,16 +104,14 @@ class Batch
      * @param string $commandWithSignature
      * @return $this;
      */
-    public function add($commandWithSignature)
+    public function add($commandWithSignature, ...$args)
     {
         if (!is_string($commandWithSignature)) {
             throw BatchException::signatureExpected($commandWithSignature);
         }
 
         // transparent vsprintf
-        if (func_num_args() > 1) {
-            $args = func_get_args();
-            array_shift($args);
+        if (count($args) > 0) {
             $commandWithSignature = vsprintf($commandWithSignature, $args);
         }
 
