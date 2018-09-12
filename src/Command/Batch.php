@@ -280,7 +280,7 @@ class Batch
                 extract($command);
 
                 if (isset($process)) {
-                    /** @var Process $process */
+                    /** @var \Symfony\Component\Process\Process $process */
 
                     $commandAsString = $process->getCommandLine();
                 }
