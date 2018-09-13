@@ -21,8 +21,6 @@ use EFrane\ConsoleAdditions\Exception\FileOutputException;
  */
 class NativeFileOutput extends FileOutput
 {
-    protected $fp;
-
     /**
      * @param $filename
      * @return resource file stream pointer
@@ -30,9 +28,9 @@ class NativeFileOutput extends FileOutput
      */
     public function loadFileStream($filename)
     {
-        $this->fp = fopen($filename, $this->getFileOpenMode());
-        if ($this->fp && is_resource($this->fp)) {
-            return $this->fp;
+        $this->stream = fopen($filename, $this->getFileOpenMode());
+        if ($this->stream && is_resource($this->stream)) {
+            return $this->stream;
         }
 
         throw FileOutputException::failedToOpenFileForWriting($filename);
@@ -43,9 +41,7 @@ class NativeFileOutput extends FileOutput
      */
     public function __destruct()
     {
-        if (is_resource($this->fp)) {
-            fclose($this->fp);
-        }
+        parent::__destruct();
     }
 
     /**

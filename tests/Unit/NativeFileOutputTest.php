@@ -77,4 +77,21 @@ class NativeFileOutputTest extends TestCase
     {
         new NativeFileOutput(self::TESTFILENAME, 512);
     }
+
+    public function testDebounces()
+    {
+        $sut = new NativeFileOutput(self::TESTFILENAME);
+        $sut->setDebounceMilliseconds(1000);
+
+        $sut->write('message');
+        $content = file_get_contents(self::TESTFILENAME);
+        $this->assertEquals('', $content);
+
+        sleep(1);
+
+        $sut->write('');
+
+        $content = file_get_contents(self::TESTFILENAME);
+        $this->assertEquals('message', $content);
+    }
 }
