@@ -18,7 +18,7 @@ class FlysystemFileOutputTest extends TestCase
     {
         /* @var \PHPUnit_Framework_MockObject_MockObject|NullAdapter $adapter */
         $adapter = $this->createMock(NullAdapter::class);
-        $adapter->expects($this->once())->method('writeStream');
+        $adapter->expects($this->once())->method('write');
 
         $filesystem = new Filesystem($adapter);
 

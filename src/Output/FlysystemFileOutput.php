@@ -30,11 +30,6 @@ class FlysystemFileOutput extends FileOutput
     protected $filesystem;
 
     /**
-     * @var resource
-     */
-    protected $stream;
-
-    /**
      * FlysystemFileOutput constructor.
      *
      * @param Filesystem                    $filesystem
@@ -54,26 +49,19 @@ class FlysystemFileOutput extends FileOutput
     ) {
         $this->filesystem = $filesystem;
 
+        $this->writeCallback = function ($message, $newline) {
+            try {
+                if ($newline) {
+                    $message .= "\n";
+                }
+
+                $this->filesystem->write($this->filename, $message);
+            } catch (FileNotFoundException $e) {
+                throw FileOutputException::failedToOpenFileForWriting($this->filename);
+            }
+        };
+
         parent::__construct($filename, $writeMode, $verbosity, $decorated, $formatter);
-    }
-
-    /**
-     *
-     */
-    public function __destruct()
-    {
-        rewind($this->stream);
-
-        try {
-            $this->filesystem->writeStream($this->filename, $this->stream);
-        } catch (FileNotFoundException $e) {
-            throw FileOutputException::failedToOpenFileForWriting($this->filename);
-        }
-
-        if (is_resource($this->stream)) {
-            fclose($this->stream);
-        }
-
     }
 
     /**
