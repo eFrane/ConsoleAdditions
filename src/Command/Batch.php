@@ -127,6 +127,7 @@ class Batch
      * @param resource|string|null $input
      * @param float                $timeout
      * @return $this
+     * @throws BatchException
      */
     public function addShell($command, $cwd = null, $env = null, $input = null, $timeout = 60.0)
     {
@@ -153,6 +154,7 @@ class Batch
      * @param string   $cmd
      * @param callable $configurationCallback (Symfony\Component\Process\Process $process)
      * @return $this
+     * @throws BatchException
      */
     public function addShellCb($cmd, callable $configurationCallback)
     {

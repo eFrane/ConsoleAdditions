@@ -276,6 +276,21 @@ HD;
         $this->assertCount(1, $sut->getCommands());
         $this->assertEquals('test', $sut->getCommands()[0]);
     }
+
+    public function testDoesNotKeepCommandState()
+    {
+        $sut = new Batch($this->app, $this->output);
+
+        $this->app->add(new TestCommand());
+
+        $sut->add('test Johnny');
+        $sut->add('test June');
+
+        $sut->run();
+
+        $this->assertEquals("Hello JohnnyHello June", $this->getOutput());
+        $this->assertNotEquals($sut->getCommands()[0], $sut->getCommands()[1]);
+    }
 }
 
 final class TestCommand extends Command
