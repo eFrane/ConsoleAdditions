@@ -37,14 +37,6 @@ class NativeFileOutput extends FileOutput
     }
 
     /**
-     * Closes open file resources on destruct
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-
-    /**
      * Convert the file write mode constant to an fopen mode
      *
      * @return string fopen()-conform write mode descriptor
