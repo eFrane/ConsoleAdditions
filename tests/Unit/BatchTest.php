@@ -56,10 +56,13 @@ class BatchTest extends TestCase
         $this->assertInternalType('array', $sut->getCommands());
         $sut->add('help');
 
-        $this->assertEquals([
-            'list',
-            'help',
-        ], $sut->getCommands());
+        $this->assertEquals(
+            [
+                'list',
+                'help',
+            ],
+            $sut->getCommands()
+        );
     }
 
     public function testBatchRunOne()
@@ -103,10 +106,12 @@ HD;
     public function testBatchRun()
     {
         $sut = new Batch($this->app, $this->output);
-        $sut->setCommands([
-            'list',
-            'list',
-        ]);
+        $sut->setCommands(
+            [
+                'list',
+                'list',
+            ]
+        );
 
         try {
             $sut->run();
@@ -197,6 +202,19 @@ HD;
         $sut->run();
     }
 
+    public function testRunSilent()
+    {
+        $this->app->add(new TestCommand());
+
+        $sut = new Batch($this->app, $this->output);
+        $sut->add('test --throw-exception');
+
+        $sut->runSilent();
+
+        $this->assertTrue($sut->hasException());
+        $this->assertEquals('Testing exception cascading', $sut->getLastException()->getMessage());
+    }
+
     /**
      * @expectedException \EFrane\ConsoleAdditions\Exception\BatchException
      */
@@ -221,12 +239,15 @@ HD;
     public function testAddShellCbAddsConfiguredProcess()
     {
         $sut = new Batch($this->app, $this->output);
-        $sut->addShellCb('echo "Hello Shell"', function (Process $process) {
-            $this->assertEquals('echo "Hello Shell"', $process->getCommandLine());
-            $process->setWorkingDirectory('this/is/a/directory');
+        $sut->addShellCb(
+            'echo "Hello Shell"',
+            function (Process $process) {
+                $this->assertEquals('echo "Hello Shell"', $process->getCommandLine());
+                $process->setWorkingDirectory('this/is/a/directory');
 
-            return $process;
-        });
+                return $process;
+            }
+        );
 
         $this->assertEquals(1, count($sut->getCommands()));
         $this->assertArrayHasKey('process', $sut->getCommands()[0]);
@@ -304,10 +325,10 @@ final class TestCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->write('Hello ' . $input->getArgument('name'));
+        $output->write('Hello '.$input->getArgument('name'));
 
         if ($input->getOption('throw-exception')) {
-            throw new \RuntimeException("Testing exception cascading");
+            throw new \RuntimeException('Testing exception cascading');
         }
 
         return 0;
