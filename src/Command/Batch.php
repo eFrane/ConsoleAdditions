@@ -8,6 +8,7 @@
 namespace EFrane\ConsoleAdditions\Command;
 
 
+use Exception;
 use EFrane\ConsoleAdditions\Exception\BatchException;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -55,7 +56,12 @@ class Batch
     /**
      * @var Application
      */
-    protected $application = null;
+    protected $application;
+
+    /**
+     * @var Exception
+     */
+    protected $lastException;
 
     public function __construct(Application $application, OutputInterface $output)
     {
@@ -232,6 +238,17 @@ class Batch
         return $command->run($input, $this->output);
     }
 
+    public function runSilent()
+    {
+        try {
+            return $this->run();
+        } catch (Exception $e) {
+            $this->setLastException($e);
+
+            return -1;
+        }
+    }
+
     public function createCommandFromString($commandWithSignature, InputInterface &$input = null)
     {
         $commandName = explode(' ', $commandWithSignature, 2)[0];
@@ -252,12 +269,14 @@ class Batch
         $process->mustRun();
         $process->enableOutput();
 
-        $process->run(function ($type, $out) {
-            // TODO: allow access to process stderr
-            if ('out' === $type) {
-                $this->output->write($out);
+        $process->run(
+            function ($type, $out) {
+                // TODO: allow access to process stderr
+                if ('out' === $type) {
+                    $this->output->write($out);
+                }
             }
-        });
+        );
 
         return $process->getExitCode();
     }
@@ -267,40 +286,70 @@ class Batch
      */
     public function __toString()
     {
-        return implode("\n", array_map(function ($command) {
-            $commandAsString = '';
+        return implode(
+            "\n",
+            array_map(
+                function ($command) {
+                    $commandAsString = '';
 
-            if (is_string($command)) {
-                $commandAsString = sprintf(
-                    '%s %s',
-                    $this->application->getName(),
-                    $command
-                );
-            }
+                    if (is_string($command)) {
+                        $commandAsString = sprintf(
+                            '%s %s',
+                            $this->application->getName(),
+                            $command
+                        );
+                    }
 
-            if (is_array($command)) {
-                extract($command);
+                    if (is_array($command)) {
+                        extract($command);
 
-                if (isset($process)) {
-                    /** @var \Symfony\Component\Process\Process $process */
+                        if (isset($process)) {
+                            /** @var \Symfony\Component\Process\Process $process */
 
-                    $commandAsString = $process->getCommandLine();
-                }
+                            $commandAsString = $process->getCommandLine();
+                        }
 
-                if (isset($command, $input)) {
-                    /** @var Command $command */
-                    /** @var InputInterface $input */
+                        if (isset($command, $input)) {
+                            /** @var Command $command */
+                            /** @var InputInterface $input */
 
-                    $commandAsString = sprintf(
-                        '%s %s %s',
-                        $this->application->getName(),
-                        $command->getName(),
-                        $input
-                    );
-                }
-            }
+                            $commandAsString = sprintf(
+                                '%s %s %s',
+                                $this->application->getName(),
+                                $command->getName(),
+                                $input
+                            );
+                        }
+                    }
 
-            return trim($commandAsString);
-        }, $this->commands));
+                    return trim($commandAsString);
+                },
+                $this->commands
+            )
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasException()
+    {
+        return $this->lastException instanceof Exception;
+    }
+
+    /**
+     * @return Exception
+     */
+    public function getLastException()
+    {
+        return $this->lastException;
+    }
+
+    /**
+     * @param Exception $e
+     */
+    public function setLastException(Exception $e)
+    {
+        $this->lastException = $e;
     }
 }
