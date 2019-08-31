@@ -8,26 +8,38 @@
 namespace EFrane\ConsoleAdditions\Exception;
 
 
-class BatchException extends \RuntimeException
+use RuntimeException;
+
+class BatchException extends RuntimeException
 {
-    public static function inputMustNotBeNull()
+    public static function inputMustNotBeNull(): self
     {
         return new self('Input must not be null');
     }
 
-    public static function signatureExpected($commandWithSignature)
+    public static function commandArrayFormatMismatch(array $commandArray): self
     {
-        return new self('Expected command name with signature, got a value of type ' . gettype($commandWithSignature));
-    }
-
-    public static function commandArrayFormatMismatch(array $commandArray) {
         $arrayKeyList = implode(', ', array_keys($commandArray));
 
         return new self("Expected array with keys 'command' and 'input', instead got these keys: {$arrayKeyList}");
     }
 
-    public static function missingSymfonyProcess()
+    public static function missingSymfonyProcess(): self
     {
-        return new self('Missing Process class, please add `symfony/process` to your composer dependencies to use this function.');
+        return new self(
+            'Missing Process class, please add `symfony/process` to your composer dependencies to use this function.'
+        );
+    }
+
+    public static function invalidActionSet(): self
+    {
+        return new self(
+            'Invalid action set provided, all actions in the array must be an instance of EFrane\ConsoleAddtions\Batch\Action'
+        );
+    }
+
+    public static function invalidShellCommandType(array $command): self
+    {
+        return new self('Invalid shell command type, expected string or array, got: '.gettype($command));
     }
 }

@@ -8,13 +8,19 @@
 namespace EFrane\ConsoleAdditions\Command;
 
 
-use Exception;
+use EFrane\ConsoleAdditions\Batch\Action;
+use EFrane\ConsoleAdditions\Batch\InstanceCommandAction;
+use EFrane\ConsoleAdditions\Batch\ShellAction;
+use EFrane\ConsoleAdditions\Batch\StringCommandAction;
 use EFrane\ConsoleAdditions\Exception\BatchException;
+use Exception;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
+use function strlen;
 
 /**
  * Batch
@@ -41,17 +47,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Batch
 {
-    const ALLOWED_COMMAND_ARRAY_KEYS = ['command', 'input', 'process'];
-
     /**
      * @var OutputInterface
      */
     protected $output = null;
 
     /**
-     * @var array
+     * @var array|Action[]
      */
-    protected $commands = [];
+    protected $actions = [];
 
     /**
      * @var Application
@@ -63,13 +67,24 @@ class Batch
      */
     protected $lastException;
 
+    /**
+     * Batch constructor.
+     *
+     * @param Application     $application
+     * @param OutputInterface $output
+     */
     public function __construct(Application $application, OutputInterface $output)
     {
         $this->setOutput($output);
         $this->application = $application;
     }
 
-    public static function create(Application $application, OutputInterface $output)
+    /**
+     * @param Application     $application
+     * @param OutputInterface $output
+     * @return Batch
+     */
+    public static function create(Application $application, OutputInterface $output): self
     {
         return new self($application, $output);
     }
@@ -77,101 +92,177 @@ class Batch
     /**
      * @return OutputInterface
      */
-    public function getOutput()
+    public function getOutput(): OutputInterface
     {
         return $this->output;
     }
 
     /**
      * @param OutputInterface $output
+     * @return Batch
      */
-    public function setOutput(OutputInterface $output)
+    public function setOutput(OutputInterface $output): self
     {
         $this->output = $output;
+
+        return $this;
     }
 
     /**
-     * @return array
+     * @return bool
      */
-    public function getCommands()
+    public function hasException(): bool
     {
-        return $this->commands;
+        return $this->lastException instanceof Exception;
     }
 
     /**
-     * @param array $commands
+     * @return Exception
      */
-    public function setCommands(array $commands)
+    public function getLastException(): Exception
     {
-        $this->commands = $commands;
+        return $this->lastException;
+    }
+
+    /**
+     * @param Exception $e
+     */
+    protected function setLastException(Exception $e)
+    {
+        $this->lastException = $e;
+    }
+
+    /**
+     * @return array|Action[]
+     */
+    public function getActions(): array
+    {
+        return $this->actions;
+    }
+
+    /**
+     * @param array|Action[] $actions
+     */
+    public function setActions(array $actions)
+    {
+        foreach ($actions as $action) {
+            if (!is_a($action, Action::class)) {
+                BatchException::invalidActionSet();
+            }
+        }
+
+        $this->actions = $actions;
     }
 
     /**
      * @param string $commandWithSignature
+     * @param array  $args
      * @return $this;
      */
-    public function add($commandWithSignature, ...$args)
+    public function add(string $commandWithSignature, ...$args): self
     {
-        if (!is_string($commandWithSignature)) {
-            throw BatchException::signatureExpected($commandWithSignature);
-        }
+        return $this->addAction(new StringCommandAction($this->application, $commandWithSignature, ...$args));
+    }
 
-        // transparent vsprintf
-        if (count($args) > 0) {
-            $commandWithSignature = vsprintf($commandWithSignature, $args);
-        }
-
-        array_push($this->commands, $commandWithSignature);
+    /**
+     * @param Action $action
+     * @return Batch
+     */
+    public function addAction(Action $action): self
+    {
+        array_push($this->actions, $action);
 
         return $this;
     }
 
     /**
-     * @param string               $command
+     * @param array|string         $command
      * @param string               $cwd
      * @param array                $env
      * @param resource|string|null $input
-     * @param float                $timeout
+     * @param int                  $timeout
      * @return $this
-     * @throws BatchException
      */
-    public function addShell($command, $cwd = null, $env = null, $input = null, $timeout = 60.0)
+    public function addShell($command, string $cwd = null, array $env = null, $input = null, int $timeout = 0): self
     {
-        $this->checkShell();
+        $command = $this->prepareShellCommand($command);
 
-        $process = new \Symfony\Component\Process\Process($command, $cwd, $env, $input, $timeout);
-        array_push($this->commands, compact('process'));
-
-        return $this;
+        return $this->addAction(new ShellAction($command, $cwd, $env, $input, $timeout));
     }
 
     /**
-     * Checks whether symfony/process is available
-     * @throws BatchException
+     * @param $shellCommand
+     * @return array|string
      */
-    public function checkShell()
+    protected function prepareShellCommand($shellCommand)
     {
-        if (!class_exists('Symfony\Component\Process\Process')) {
-            throw BatchException::missingSymfonyProcess();
+        if (!in_array(gettype($shellCommand), ['array', 'string'])) {
+            throw BatchException::invalidShellCommandType($shellCommand);
         }
+
+        if (is_string($shellCommand)) {
+            /**
+             * This is StringInput::tokenize() which unfortunately is a private method.
+             * I do not like private methods.
+             *
+             * Maybe there will be a mangical time when this can be replaced with
+             *
+             * $shellCommand = (new StringInput($shellCommand))->getTokens();
+             */
+            $tokens = [];
+
+            $length = strlen($shellCommand);
+            $cursor = 0;
+
+            while ($cursor < $length) {
+                if (preg_match('/\s+/A', $shellCommand, $match, null, $cursor)) {
+                } elseif (preg_match(
+                    '/([^="\'\s]+?)(=?)('.StringInput::REGEX_QUOTED_STRING.'+)/A',
+                    $shellCommand,
+                    $match,
+                    null,
+                    $cursor
+                )) {
+                    $tokens[] = $match[1].$match[2].stripcslashes(
+                            str_replace(['"\'', '\'"', '\'\'', '""'], '', substr($match[3], 1, strlen($match[3]) - 2))
+                        );
+                } elseif (preg_match('/'.StringInput::REGEX_QUOTED_STRING.'/A', $shellCommand, $match, null, $cursor)) {
+                    $tokens[] = stripcslashes(substr($match[0], 1, strlen($match[0]) - 2));
+                } elseif (preg_match('/'.StringInput::REGEX_STRING.'/A', $shellCommand, $match, null, $cursor)) {
+                    $tokens[] = stripcslashes($match[1]);
+                } else {
+                    // should never happen
+                    throw new InvalidArgumentException(
+                        sprintf('Unable to parse input near "... %s ..."', substr($shellCommand, $cursor, 10))
+                    );
+                }
+
+                $cursor += strlen($match[0]);
+            }
+            /**
+             * End of StringInput::tokenize()
+             */
+
+            $shellCommand = $tokens;
+        }
+
+        return $shellCommand;
     }
 
     /**
-     * @param string   $cmd
-     * @param callable $configurationCallback (Symfony\Component\Process\Process $process)
+     * @param array|string $shellCommand
+     * @param callable     $configurationCallback (Symfony\Component\Process\Process $process)
      * @return $this
-     * @throws BatchException
      */
-    public function addShellCb($cmd, callable $configurationCallback)
+    public function addShellCb($shellCommand, callable $configurationCallback): self
     {
-        $this->checkShell();
+        $shellCommand = $this->prepareShellCommand($shellCommand);
 
-        $process = new \Symfony\Component\Process\Process($cmd);
-        $process = call_user_func($configurationCallback, $process);
+        $action = new ShellAction($shellCommand);
 
-        array_push($this->commands, compact('process'));
+        call_user_func($configurationCallback, $action->getProcess());
 
-        return $this;
+        return $this->addAction($action);
     }
 
     /**
@@ -179,66 +270,15 @@ class Batch
      * @param InputInterface $input
      * @return $this
      */
-    public function addObject(Command $command, InputInterface $input)
+    public function addCommandInstance(Command $command, InputInterface $input): self
     {
-        array_push($this->commands, compact('command', 'input'));
-
-        return $this;
+        return $this->addAction(new InstanceCommandAction($this->application, $command, $input));
     }
 
     /**
-     * @throws \Exception
-     */
-    public function run()
-    {
-        if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
-            $commandCount = count($this->commands);
-            $this->output->writeln("Running {$commandCount} commands...");
-        }
-
-        $returnValue = 0;
-
-        foreach ($this->commands as $command) {
-            $returnValue &= $this->runOne($command);
-        }
-
-        return $returnValue;
-    }
-
-    /**
-     * @param string|array        $command
-     * @param InputInterface|null $input
      * @return int
-     * @throws \Exception|BatchException
      */
-    public function runOne($command, InputInterface $input = null)
-    {
-        if (is_array($command)
-        ) {
-            //  the amount of values in command equals the amount of keys which are in the amount of allowed keys
-            if (count($command) === array_intersect(array_keys($command), self::ALLOWED_COMMAND_ARRAY_KEYS)) {
-                throw BatchException::commandArrayFormatMismatch($command);
-            }
-
-            extract($command);
-        }
-
-        if (is_string($command)) {
-            $command = $this->createCommandFromString($command, $input);
-        }
-
-        if (is_null($input) && !isset($process)) {
-            throw BatchException::inputMustNotBeNull();
-        }
-
-        if (isset($process)) {
-            return $this->runProcess($process);
-        }
-
-        return $command->run($input, $this->output);
-    }
-
-    public function runSilent()
+    public function runSilent(): int
     {
         try {
             return $this->run();
@@ -249,107 +289,48 @@ class Batch
         }
     }
 
-    public function createCommandFromString($commandWithSignature, InputInterface &$input = null)
+    /**
+     * @return int
+     * @throws Exception
+     */
+    public function run(): int
     {
-        $commandName = explode(' ', $commandWithSignature, 2)[0];
+        $actionCount = count($this->actions);
+        $this->output->writeln("Running {$actionCount} actions...", OutputInterface::VERBOSITY_VERBOSE);
 
-        $command = $this->application->get($commandName);
+        $returnValue = 0;
 
-        $input = new StringInput($commandWithSignature);
+        foreach ($this->actions as $action) {
+            $returnValue &= $this->runOne($action);
+        }
 
-        return $command;
+        return $returnValue;
     }
 
     /**
-     * @param Process $process
+     * @param Action $action
      * @return int
      */
-    public function runProcess(\Symfony\Component\Process\Process $process)
+    public function runOne(Action $action): int
     {
-        $process->mustRun();
-        $process->enableOutput();
+        $this->output->writeln("Next action: {$action}", OutputInterface::VERBOSITY_VERBOSE);
 
-        $process->run(
-            function ($type, $out) {
-                // TODO: allow access to process stderr
-                if ('out' === $type) {
-                    $this->output->write($out);
-                }
-            }
-        );
-
-        return $process->getExitCode();
+        return $action->execute($this->output);
     }
 
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return implode(
             "\n",
             array_map(
-                function ($command) {
-                    $commandAsString = '';
-
-                    if (is_string($command)) {
-                        $commandAsString = sprintf(
-                            '%s %s',
-                            $this->application->getName(),
-                            $command
-                        );
-                    }
-
-                    if (is_array($command)) {
-                        extract($command);
-
-                        if (isset($process)) {
-                            /** @var \Symfony\Component\Process\Process $process */
-
-                            $commandAsString = $process->getCommandLine();
-                        }
-
-                        if (isset($command, $input)) {
-                            /** @var Command $command */
-                            /** @var InputInterface $input */
-
-                            $commandAsString = sprintf(
-                                '%s %s %s',
-                                $this->application->getName(),
-                                $command->getName(),
-                                $input
-                            );
-                        }
-                    }
-
-                    return trim($commandAsString);
+                function (Action $action) {
+                    return (string)$action;
                 },
-                $this->commands
+                $this->actions
             )
         );
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasException()
-    {
-        return $this->lastException instanceof Exception;
-    }
-
-    /**
-     * @return Exception
-     */
-    public function getLastException()
-    {
-        return $this->lastException;
-    }
-
-    /**
-     * @param Exception $e
-     */
-    public function setLastException(Exception $e)
-    {
-        $this->lastException = $e;
     }
 }

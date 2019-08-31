@@ -29,6 +29,7 @@ class NativeFileOutput extends FileOutput
     public function loadFileStream($filename)
     {
         $this->stream = fopen($filename, $this->getFileOpenMode());
+
         if ($this->stream && is_resource($this->stream)) {
             return $this->stream;
         }
