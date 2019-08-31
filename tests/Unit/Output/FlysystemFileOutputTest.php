@@ -4,7 +4,7 @@
  * @author Stefan "eFrane" Graupner <efrane@meanderingsoul.com>
  */
 
-namespace Tests\Unit;
+namespace Tests\Unit\Output;
 
 
 use EFrane\ConsoleAdditions\Output\FlysystemFileOutput;
