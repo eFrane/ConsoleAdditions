@@ -142,6 +142,15 @@ HD;
         $this->assertEquals('Hello Test', $this->getOutput());
     }
 
+    public function testAddMessage()
+    {
+        $sut = new Batch($this->app, $this->output);
+        $sut->addMessage('Foo');
+        $sut->run();
+
+        $this->assertEquals("Foo\n", $this->getOutput());
+    }
+
     /**
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Testing exception cascading

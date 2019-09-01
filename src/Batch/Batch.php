@@ -175,6 +175,11 @@ class Batch
         return $this->addAction(new StringCommandAction($commandWithSignature, ...$args));
     }
 
+    public function addMessage(string $message, bool $newLine = true, int $verbosity = OutputInterface::VERBOSITY_NORMAL)
+    {
+        return $this->addAction(new MessageAction($message, $newLine, $verbosity));
+    }
+
     /**
      * @param array|string         $command
      * @param string               $cwd
