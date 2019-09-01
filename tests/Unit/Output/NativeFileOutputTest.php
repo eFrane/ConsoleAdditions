@@ -6,6 +6,7 @@
 
 namespace Tests\Unit\Output;
 
+use EFrane\ConsoleAdditions\Exception\FileOutputException;
 use EFrane\ConsoleAdditions\Output\NativeFileOutput;
 use Tests\TestCase;
 
@@ -13,7 +14,7 @@ class NativeFileOutputTest extends TestCase
 {
     const TESTFILENAME = 'testfile.log';
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if (file_exists(self::TESTFILENAME)) {
             unlink(self::TESTFILENAME);
@@ -70,11 +71,10 @@ class NativeFileOutputTest extends TestCase
         $this->assertEquals('message2', $content);
     }
 
-    /**
-     * @expectedException \EFrane\ConsoleAdditions\Exception\FileOutputException
-     */
     public function testReportsIncorrectWriteMode()
     {
+        $this->expectException(FileOutputException::class);
+
         new NativeFileOutput(self::TESTFILENAME, 512);
     }
 

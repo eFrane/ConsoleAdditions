@@ -11,6 +11,7 @@ use EFrane\ConsoleAdditions\Batch\Batch;
 use EFrane\ConsoleAdditions\Batch\InstanceCommandAction;
 use EFrane\ConsoleAdditions\Batch\ProcessAction;
 use EFrane\ConsoleAdditions\Batch\StringCommandAction;
+use RuntimeException;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Process\Process;
 use Tests\TestCommand;
@@ -23,7 +24,7 @@ class BatchTest extends BatchTestCase
         $sut->add('list');
 
         $this->assertEquals(1, count($sut->getActions()));
-        $this->assertInternalType('array', $sut->getActions());
+        $this->assertIsArray($sut->getActions());
         $sut->add('help');
 
         $this->assertEquals(
@@ -151,13 +152,11 @@ HD;
         $this->assertEquals("Foo\n", $this->getOutput());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Testing exception cascading
-     * @throws \Exception
-     */
     public function testRunCascadesCommandException()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Testing exception cascading');
+
         $this->app->add(new TestCommand());
 
         $sut = new Batch($this->app, $this->output);

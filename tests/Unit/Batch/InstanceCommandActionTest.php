@@ -38,11 +38,10 @@ class InstanceCommandActionTest extends BatchTestCase
         $this->assertEquals('Hello Input', $this->getOutput());
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testDoesntCatchExceptions()
     {
+        $this->expectException(RuntimeException::class);
+
         $sut = new InstanceCommandAction(new TestCommand(), new StringInput('--throw-exception'));
         $sut->execute($this->output);
     }

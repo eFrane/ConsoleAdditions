@@ -17,7 +17,7 @@ class MultiplexedOutputTest extends TestCase
 {
     const TESTFILENAME = 'testfile.log';
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if (file_exists(self::TESTFILENAME)) {
             unlink(self::TESTFILENAME);

@@ -8,6 +8,7 @@ namespace Tests\Unit\Batch;
 
 
 use EFrane\ConsoleAdditions\Batch\StringCommandAction;
+use EFrane\ConsoleAdditions\Exception\BatchException;
 use Tests\TestCommand;
 
 class StringCommandActionTest extends BatchTestCase
@@ -23,11 +24,10 @@ class StringCommandActionTest extends BatchTestCase
         $this->assertEquals('Hello Test', $this->getOutput());
     }
 
-    /**
-     * @expectedException \EFrane\ConsoleAdditions\Exception\BatchException
-     */
     public function testExecuteFailsWithoutApplication()
     {
+        $this->expectException(BatchException::class);
+
         $sut = new StringCommandAction('testCommand');
         $sut->execute($this->output);
     }

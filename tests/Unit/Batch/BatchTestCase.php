@@ -28,14 +28,14 @@ abstract class BatchTestCase extends \PHPUnit\Framework\TestCase
      */
     protected $output;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = new Application('testApp');
 
         $this->output = new NativeFileOutput(self::TEST_OUTPUT_FILENAME, FileOutput::WRITE_MODE_RESET);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if (file_exists(self::TEST_OUTPUT_FILENAME)) {
             unlink(self::TEST_OUTPUT_FILENAME);
