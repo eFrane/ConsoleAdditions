@@ -5,14 +5,9 @@
  * @license MIT
  */
 
-namespace EFrane\ConsoleAdditions\Command;
+namespace EFrane\ConsoleAdditions\Batch;
 
 
-use EFrane\ConsoleAdditions\Batch\Action;
-use EFrane\ConsoleAdditions\Batch\CommandAction;
-use EFrane\ConsoleAdditions\Batch\InstanceCommandAction;
-use EFrane\ConsoleAdditions\Batch\ShellAction;
-use EFrane\ConsoleAdditions\Batch\StringCommandAction;
 use EFrane\ConsoleAdditions\Exception\BatchException;
 use Exception;
 use Symfony\Component\Console\Application;
@@ -156,16 +151,6 @@ class Batch
     }
 
     /**
-     * @param string $commandWithSignature
-     * @param array  $args
-     * @return $this;
-     */
-    public function add(string $commandWithSignature, ...$args): self
-    {
-        return $this->addAction(new StringCommandAction($commandWithSignature, ...$args));
-    }
-
-    /**
      * @param Action $action
      * @return Batch
      */
@@ -178,6 +163,16 @@ class Batch
         array_push($this->actions, $action);
 
         return $this;
+    }
+
+    /**
+     * @param string $commandWithSignature
+     * @param array  $args
+     * @return $this;
+     */
+    public function add(string $commandWithSignature, ...$args): self
+    {
+        return $this->addAction(new StringCommandAction($commandWithSignature, ...$args));
     }
 
     /**

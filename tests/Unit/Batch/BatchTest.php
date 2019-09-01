@@ -4,17 +4,16 @@
  * @author Stefan "eFrane" Graupner <efrane@meanderingsoul.com>
  */
 
-namespace Tests\Unit;
+namespace Tests\Unit\Batch;
 
 
+use EFrane\ConsoleAdditions\Batch\Batch;
 use EFrane\ConsoleAdditions\Batch\InstanceCommandAction;
 use EFrane\ConsoleAdditions\Batch\ProcessAction;
 use EFrane\ConsoleAdditions\Batch\StringCommandAction;
-use EFrane\ConsoleAdditions\Command\Batch;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Process\Process;
 use Tests\TestCommand;
-use Tests\Unit\Batch\BatchTestCase;
 
 class BatchTest extends BatchTestCase
 {
