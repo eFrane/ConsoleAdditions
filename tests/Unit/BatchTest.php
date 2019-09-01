@@ -8,8 +8,10 @@ namespace Tests\Unit;
 
 
 use EFrane\ConsoleAdditions\Command\Batch;
+use EFrane\ConsoleAdditions\Exception\BatchException;
 use EFrane\ConsoleAdditions\Output\FileOutput;
 use EFrane\ConsoleAdditions\Output\NativeFileOutput;
+use RuntimeException;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -33,14 +35,14 @@ class BatchTest extends TestCase
      */
     protected $output;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = new Application('test');
 
         $this->output = new NativeFileOutput(self::TEST_OUTPUT_FILENAME, FileOutput::WRITE_MODE_RESET);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if (file_exists(self::TEST_OUTPUT_FILENAME)) {
             unlink(self::TEST_OUTPUT_FILENAME);
@@ -53,7 +55,7 @@ class BatchTest extends TestCase
         $sut->add('list');
 
         $this->assertEquals(1, count($sut->getCommands()));
-        $this->assertInternalType('array', $sut->getCommands());
+        $this->assertIsArray($sut->getCommands());
         $sut->add('help');
 
         $this->assertEquals([
@@ -161,7 +163,7 @@ HD;
         $sut = new Batch($this->app, $this->output);
         $sut->addObject($this->app->get('test'), new ArrayInput([]));
         $this->assertEquals(1, count($sut->getCommands()));
-        $this->assertInternalType('array', $sut->getCommands()[0]);
+        $this->assertIsArray($sut->getCommands()[0]);
 
         // try {
         $sut->run();
@@ -171,24 +173,21 @@ HD;
         $this->assertEquals('Hello Test', $this->getOutput());
     }
 
-    /**
-     * @expectedException \EFrane\ConsoleAdditions\Exception\BatchException
-     */
     public function testAddThrowsOnObject()
     {
+        $this->expectException(BatchException::class);
+
         $this->app->add(new TestCommand());
 
         $sut = new Batch($this->app, $this->output);
         $sut->add($this->app->get('test'));
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Testing exception cascading
-     * @throws \Exception
-     */
     public function testRunCascadesCommandException()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Testing exception cascading');
+
         $this->app->add(new TestCommand());
 
         $sut = new Batch($this->app, $this->output);
@@ -197,11 +196,10 @@ HD;
         $sut->run();
     }
 
-    /**
-     * @expectedException \EFrane\ConsoleAdditions\Exception\BatchException
-     */
     public function testRunOneThrowsOnInvalidArray()
     {
+        $this->expectException(BatchException::class);
+
         $this->app->add(new TestCommand());
 
         $sut = new Batch($this->app, $this->output);
@@ -292,7 +290,7 @@ final class TestCommand extends Command
         $output->write('Hello ' . $input->getArgument('name'));
 
         if ($input->getOption('throw-exception')) {
-            throw new \RuntimeException("Testing exception cascading");
+            throw new RuntimeException("Testing exception cascading");
         }
 
         return 0;
