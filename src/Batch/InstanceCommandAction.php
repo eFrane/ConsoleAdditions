@@ -8,14 +8,19 @@ namespace EFrane\ConsoleAdditions\Batch;
 
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 
 class InstanceCommandAction extends CommandAction
 {
-    public function __construct(Command $command, InputInterface $input)
+    public function __construct(Command $command, InputInterface $input = null)
     {
         $this->command = $command;
+
         $this->input = $input;
+        if (is_null($input)) {
+            $this->input = new ArrayInput([]);
+        }
     }
 
     public function __toString(): string
