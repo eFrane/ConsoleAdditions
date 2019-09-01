@@ -18,13 +18,13 @@ class InstanceCommandActionTest extends BatchTestCase
     public function testAcceptsInstance()
     {
         $command = new TestCommand();
-        $sut = new InstanceCommandAction($this->app, $command, new StringInput(''));
+        $sut = new InstanceCommandAction($command, new StringInput(''));
         $this->assertInstanceOf(InstanceCommandAction::class, $sut);
     }
 
     public function testExecutesCommand()
     {
-        $sut = new InstanceCommandAction($this->app, new TestCommand(), new StringInput(''));
+        $sut = new InstanceCommandAction(new TestCommand(), new StringInput(''));
         $sut->execute($this->output);
 
         $this->assertEquals('Hello Test', $this->getOutput());
@@ -32,7 +32,7 @@ class InstanceCommandActionTest extends BatchTestCase
 
     public function testPassesInputToCommand()
     {
-        $sut = new InstanceCommandAction($this->app, new TestCommand(), new StringInput('Input'));
+        $sut = new InstanceCommandAction(new TestCommand(), new StringInput('Input'));
         $sut->execute($this->output);
 
         $this->assertEquals('Hello Input', $this->getOutput());
@@ -43,22 +43,28 @@ class InstanceCommandActionTest extends BatchTestCase
      */
     public function testDoesntCatchExceptions()
     {
-        $sut = new InstanceCommandAction($this->app, new TestCommand(), new StringInput('--throw-exception'));
+        $sut = new InstanceCommandAction(new TestCommand(), new StringInput('--throw-exception'));
         $sut->execute($this->output);
     }
 
     public function testStringifiesWithoutArguments()
     {
-        $sut = new InstanceCommandAction($this->app, new TestCommand(), new StringInput(''));
+        $sut = new InstanceCommandAction(new TestCommand(), new StringInput(''));
+        $sut->setApplication($this->app);
+
         $this->assertEquals('testApp testCommand', (string)$sut);
     }
 
     public function testStringifiesWithArguments()
     {
-        $sut = new InstanceCommandAction($this->app, new TestCommand(), new StringInput('World'));
+        $sut = new InstanceCommandAction(new TestCommand(), new StringInput('World'));
+        $sut->setApplication($this->app);
+
         $this->assertEquals('testApp testCommand World', (string)$sut);
 
-        $sut = new InstanceCommandAction($this->app, new TestCommand(), new ArrayInput(['World']));
+        $sut = new InstanceCommandAction(new TestCommand(), new ArrayInput(['World']));
+        $sut->setApplication($this->app);
+
         $this->assertEquals('testApp testCommand World', (string)$sut);
     }
 }

@@ -42,4 +42,9 @@ class BatchException extends RuntimeException
     {
         return new self('Invalid shell command type, expected string or array, got: '.gettype($command));
     }
+
+    public static function applicationMustNotBeNull(): self
+    {
+        return new self('Application must not be null');
+    }
 }

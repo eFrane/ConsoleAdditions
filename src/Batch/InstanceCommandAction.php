@@ -7,22 +7,21 @@
 namespace EFrane\ConsoleAdditions\Batch;
 
 
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 
 class InstanceCommandAction extends CommandAction
 {
-    public function __construct(Application $application, Command $command, InputInterface $input)
+    public function __construct(Command $command, InputInterface $input)
     {
-        parent::__construct($application);
-
         $this->command = $command;
         $this->input = $input;
     }
 
     public function __toString(): string
     {
+        $this->abortIfNoApplication();
+
         return trim(
             sprintf(
                 '%s %s %s',

@@ -47,6 +47,10 @@ exposes to methods for adding a shell command:
   for further configuration. This is especially useful when the desired command requires
   some kind of process piping.
 
+**Silencing Errors**
+
+It is possible to run a Batch of commands without throwing exceptions.
+
 ### Output
 
 This Package offers additional console output interfaces:

@@ -32,15 +32,6 @@ abstract class CommandAction implements Action
     protected $input = null;
 
     /**
-     * CommandAction constructor.
-     * @param Application $application
-     */
-    public function __construct(Application $application)
-    {
-        $this->application = $application;
-    }
-
-    /**
      * @param OutputInterface $output
      * @return int
      * @throws Exception
@@ -52,5 +43,23 @@ abstract class CommandAction implements Action
         }
 
         return $this->command->run($this->input, $output);
+    }
+
+    /**
+     * @param Application $application
+     * @return CommandAction
+     */
+    public function setApplication(Application $application): CommandAction
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    public function abortIfNoApplication()
+    {
+        if (!is_a($this->application, Application::class)) {
+            throw BatchException::applicationMustNotBeNull();
+        }
     }
 }

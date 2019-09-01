@@ -25,10 +25,8 @@ class StringCommandAction extends CommandAction
      * @param string      $commandString
      * @param array       $args
      */
-    public function __construct(Application $application, string $commandString, ...$args)
+    public function __construct(string $commandString, ...$args)
     {
-        parent::__construct($application);
-
         // transparent vsprintf
         if (count($args) > 0) {
             $commandString = vsprintf($commandString, $args);
@@ -46,6 +44,8 @@ class StringCommandAction extends CommandAction
 
     public function createCommandFromString()
     {
+        $this->abortIfNoApplication();
+
         $commandName = explode(' ', $this->commandString, 2)[0];
 
         $this->command = $this->application->get($commandName);
@@ -54,6 +54,8 @@ class StringCommandAction extends CommandAction
 
     public function __toString(): string
     {
+        $this->abortIfNoApplication();
+
         return trim(
             sprintf(
                 '%s %s',

@@ -18,7 +18,7 @@ use Tests\Unit\Batch\BatchTestCase;
 
 class BatchTest extends BatchTestCase
 {
-    public function testBatchAdd()
+    public function testAdd()
     {
         $sut = new Batch($this->app, $this->output);
         $sut->add('list');
@@ -29,19 +29,23 @@ class BatchTest extends BatchTestCase
 
         $this->assertEquals(
             [
-                new StringCommandAction($this->app, 'list'),
-                new StringCommandAction($this->app, 'help'),
+                (new StringCommandAction('list'))->setApplication($this->app),
+                (new StringCommandAction('help'))->setApplication($this->app),
             ],
             $sut->getActions()
         );
     }
 
-    public function testBatchRunOne()
+    public function testRunOne()
     {
         $sut = new Batch($this->app, $this->output);
 
         try {
-            $sut->runOne(new StringCommandAction($this->app, 'list'));
+            $action = new StringCommandAction('list');
+            $action->setApplication($this->app);
+
+
+            $sut->runOne($action);
         } catch (\Exception $e) {
         }
 
@@ -69,13 +73,13 @@ HD;
         $this->assertEquals($expected, $this->getOutput());
     }
 
-    public function testBatchRun()
+    public function testRun()
     {
         $sut = new Batch($this->app, $this->output);
         $sut->setActions(
             [
-                new StringCommandAction($this->app, 'list'),
-                new StringCommandAction($this->app, 'list'),
+                new StringCommandAction('list'),
+                new StringCommandAction('list'),
             ]
         );
 
@@ -134,10 +138,7 @@ HD;
         $this->assertEquals(1, count($sut->getActions()));
         $this->assertInstanceOf(InstanceCommandAction::class, $sut->getActions()[0]);
 
-        // try {
         $sut->run();
-        // } catch (\Exception $e) {
-        // }
 
         $this->assertEquals('Hello Test', $this->getOutput());
     }
@@ -218,7 +219,7 @@ HD;
         $this->assertEquals("testApp info\ntestApp help\ntestApp info", strval($sut));
     }
 
-    public function testToStringForCommandArrays()
+    public function testToStringForCommandInstances()
     {
         $sut = new Batch($this->app, $this->output);
 

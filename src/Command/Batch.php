@@ -9,6 +9,7 @@ namespace EFrane\ConsoleAdditions\Command;
 
 
 use EFrane\ConsoleAdditions\Batch\Action;
+use EFrane\ConsoleAdditions\Batch\CommandAction;
 use EFrane\ConsoleAdditions\Batch\InstanceCommandAction;
 use EFrane\ConsoleAdditions\Batch\ShellAction;
 use EFrane\ConsoleAdditions\Batch\StringCommandAction;
@@ -149,9 +150,9 @@ class Batch
             if (!is_a($action, Action::class)) {
                 BatchException::invalidActionSet();
             }
-        }
 
-        $this->actions = $actions;
+            $this->addAction($action);
+        }
     }
 
     /**
@@ -161,7 +162,7 @@ class Batch
      */
     public function add(string $commandWithSignature, ...$args): self
     {
-        return $this->addAction(new StringCommandAction($this->application, $commandWithSignature, ...$args));
+        return $this->addAction(new StringCommandAction($commandWithSignature, ...$args));
     }
 
     /**
@@ -170,6 +171,10 @@ class Batch
      */
     public function addAction(Action $action): self
     {
+        if ($action instanceof CommandAction) {
+            $action->setApplication($this->application);
+        }
+
         array_push($this->actions, $action);
 
         return $this;
@@ -272,7 +277,7 @@ class Batch
      */
     public function addCommandInstance(Command $command, InputInterface $input): self
     {
-        return $this->addAction(new InstanceCommandAction($this->application, $command, $input));
+        return $this->addAction(new InstanceCommandAction($command, $input));
     }
 
     /**
