@@ -9,7 +9,7 @@ Tools to make working with Symfony Console even more awesome.
 
 ## Installation
 
-This package is available on [Packagist](https://packagist.org/efrane/console-additions):
+This package is available on [Packagist](https://packagist.org/packages/efrane/console-additions):
 
 ```bash
 composer require efrane/console-additions
