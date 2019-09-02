@@ -24,7 +24,11 @@ class BatchTest extends BatchTestCase
         $sut->add('list');
 
         $this->assertEquals(1, count($sut->getActions()));
-        $this->assertIsArray($sut->getActions());
+
+        if (PHP_MAJOR_VERSION >= 7 && PHP_MINOR_VERSION >= 3) {
+            $this->assertIsArray($sut->getActions());
+        }
+        
         $sut->add('help');
 
         $this->assertEquals(
