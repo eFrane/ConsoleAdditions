@@ -206,6 +206,11 @@ class Batch
         }
 
         if (is_string($shellCommand)) {
+            trigger_error(
+                'Passing shell arguments as string is deprecated and will be removed in 0.7.0',
+                E_USER_DEPRECATED
+            );
+
             /**
              * This is StringInput::tokenize() which unfortunately is a private method.
              * I do not like private methods.
