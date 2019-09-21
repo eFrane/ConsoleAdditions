@@ -28,7 +28,7 @@ class BatchTest extends BatchTestCase
         if (PHP_MAJOR_VERSION >= 7 && PHP_MINOR_VERSION >= 3) {
             $this->assertIsArray($sut->getActions());
         }
-        
+
         $sut->add('help');
 
         $this->assertEquals(
@@ -185,7 +185,7 @@ HD;
     public function testAddShellAddsProcess()
     {
         $sut = new Batch($this->app, $this->output);
-        $sut->addShell('echo "Hello Shell"');
+        $sut->addShell(['echo', 'Hello', 'Shell']);
 
         $this->assertEquals(1, count($sut->getActions()));
         $this->assertInstanceOf(ProcessAction::class, $sut->getActions()[0]);
@@ -196,7 +196,7 @@ HD;
     {
         $sut = new Batch($this->app, $this->output);
         $sut->addShellCb(
-            'echo "Hello Shell"',
+            ['echo', 'Hello', 'Shell'],
             function (Process $process) {
                 $process->setWorkingDirectory('this/is/a/directory');
 
@@ -213,10 +213,10 @@ HD;
     public function testRunReturnsShellOutput()
     {
         $sut = new Batch($this->app, $this->output);
-        $sut->addShell('echo "My\nShell\nCommand"');
+        $sut->addShell(['echo', 'this-is-output']);
         $sut->run();
 
-        $this->assertEquals("My\nShell\nCommand\n", $this->getOutput());
+        $this->assertEquals("this-is-output\n", $this->getOutput());
     }
 
     public function testToStringForCommandStrings()
