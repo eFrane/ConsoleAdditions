@@ -145,7 +145,7 @@ class MultiplexedOutput implements OutputInterface
      */
     public function isVerbose()
     {
-        return $this->verbosity === OutputInterface::VERBOSITY_VERBOSE;
+        return $this->verbosity >= OutputInterface::VERBOSITY_VERBOSE;
     }
 
     /**
@@ -153,7 +153,7 @@ class MultiplexedOutput implements OutputInterface
      */
     public function isVeryVerbose()
     {
-        return $this->verbosity === OutputInterface::VERBOSITY_VERY_VERBOSE;
+        return $this->verbosity >= OutputInterface::VERBOSITY_VERY_VERBOSE;
     }
 
     /**
@@ -161,7 +161,7 @@ class MultiplexedOutput implements OutputInterface
      */
     public function isDebug()
     {
-        return $this->verbosity === OutputInterface::VERBOSITY_DEBUG;
+        return $this->verbosity >= OutputInterface::VERBOSITY_DEBUG;
     }
 
     /**

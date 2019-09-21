@@ -11,6 +11,7 @@ use EFrane\ConsoleAdditions\Output\MultiplexedOutput;
 use EFrane\ConsoleAdditions\Output\NativeFileOutput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Tests\TestCase;
 
 class MultiplexedOutputTest extends TestCase
@@ -58,5 +59,23 @@ class MultiplexedOutputTest extends TestCase
 
         $content = file_get_contents(self::TESTFILENAME);
         $this->assertEquals('message', $content);
+    }
+
+    public function testIsVerboseForAllVerbosities()
+    {
+        $verbosities = [
+            OutputInterface::VERBOSITY_VERBOSE,
+            OutputInterface::VERBOSITY_VERY_VERBOSE,
+            OutputInterface::VERBOSITY_DEBUG
+        ];
+
+        $sut = new MultiplexedOutput([
+            new NullOutput()
+        ]);
+
+        foreach ($verbosities as $verbosity) {
+            $sut->setVerbosity($verbosity);
+            $this->assertTrue($sut->isVerbose());
+        }
     }
 }
