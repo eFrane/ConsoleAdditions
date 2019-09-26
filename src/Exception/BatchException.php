@@ -12,11 +12,6 @@ use RuntimeException;
 
 class BatchException extends RuntimeException
 {
-    public static function inputMustNotBeNull(): self
-    {
-        return new self('Input must not be null');
-    }
-
     public static function commandArrayFormatMismatch(array $commandArray): self
     {
         $arrayKeyList = implode(', ', array_keys($commandArray));

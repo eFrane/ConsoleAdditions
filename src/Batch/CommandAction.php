@@ -38,10 +38,6 @@ abstract class CommandAction implements Action
      */
     public function execute(OutputInterface $output): int
     {
-        if (is_null($this->input)) {
-            throw BatchException::inputMustNotBeNull();
-        }
-
         return $this->command->run($this->input, $output);
     }
 
