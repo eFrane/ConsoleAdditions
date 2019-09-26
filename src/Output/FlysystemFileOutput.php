@@ -31,20 +31,13 @@ class FlysystemFileOutput extends FileOutput
 
     /**
      * FlysystemFileOutput constructor.
-     *
-     * @param Filesystem                    $filesystem
-     * @param bool|int                      $filename
-     * @param bool|int|null                 $writeMode
-     * @param bool|int|null                 $verbosity
-     * @param null                          $decorated
-     * @param OutputFormatterInterface|null $formatter
      */
     public function __construct(
         Filesystem $filesystem,
-        $filename,
-        $writeMode = self::WRITE_MODE_APPEND,
-        $verbosity = self::VERBOSITY_NORMAL,
-        $decorated = null,
+        string $filename,
+        int $writeMode = self::WRITE_MODE_APPEND,
+        int $verbosity = self::VERBOSITY_NORMAL,
+        bool $decorated = null,
         OutputFormatterInterface $formatter = null
     ) {
         $this->filesystem = $filesystem;

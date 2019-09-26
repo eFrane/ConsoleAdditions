@@ -75,18 +75,12 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
 
     /**
      * FileOutput constructor.
-     *
-     * @param string                        $filename
-     * @param bool|int                      $writeMode
-     * @param int                           $verbosity
-     * @param bool|null                     $decorated
-     * @param OutputFormatterInterface|null $formatter
      */
     public function __construct(
-        $filename,
-        $writeMode = self::WRITE_MODE_APPEND,
-        $verbosity = self::VERBOSITY_NORMAL,
-        $decorated = null,
+        string $filename,
+        int $writeMode = self::WRITE_MODE_APPEND,
+        int $verbosity = self::VERBOSITY_NORMAL,
+        bool $decorated = null,
         OutputFormatterInterface $formatter = null
     ) {
         $this->writeMode = $writeMode;
