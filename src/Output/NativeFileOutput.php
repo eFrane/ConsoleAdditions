@@ -28,10 +28,11 @@ class NativeFileOutput extends FileOutput
      */
     public function loadFileStream(string $filename)
     {
-        $this->stream = fopen($filename, $this->getFileOpenMode());
+        $stream = fopen($filename, $this->getFileOpenMode());
 
-        if ($this->stream && is_resource($this->stream)) {
-            return $this->stream;
+        if ($stream && is_resource($stream)) {
+            $this->stream = $stream;
+            return $stream;
         }
 
         throw FileOutputException::failedToOpenFileForWriting($filename);

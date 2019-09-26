@@ -63,11 +63,13 @@ class FlysystemFileOutput extends FileOutput
      */
     public function loadFileStream(string $filename)
     {
-        $this->stream = tmpfile();
+        $stream = tmpfile();
 
-        if (!$this->stream || !is_resource($this->stream)) {
+        if (!$stream || !is_resource($stream)) {
             throw FileOutputException::failedToOpenFileForWriting($filename);
         }
+
+        $this->stream = $stream;
 
         return $this->stream;
     }
