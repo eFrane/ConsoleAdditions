@@ -166,8 +166,8 @@ class Batch
     }
 
     /**
-     * @param string $commandWithSignature
-     * @param array  $args
+     * @param string             $commandWithSignature
+     * @param array<int, string> $args
      * @return $this;
      */
     public function add(string $commandWithSignature, ...$args): self
@@ -175,17 +175,20 @@ class Batch
         return $this->addAction(new StringCommandAction($commandWithSignature, ...$args));
     }
 
-    public function addMessage(string $message, bool $newLine = true, int $verbosity = OutputInterface::VERBOSITY_NORMAL)
-    {
+    public function addMessage(
+        string $message,
+        bool $newLine = true,
+        int $verbosity = OutputInterface::VERBOSITY_NORMAL
+    ) {
         return $this->addAction(new MessageAction($message, $newLine, $verbosity));
     }
 
     /**
-     * @param array|string         $command
-     * @param string               $cwd
-     * @param array                $env
-     * @param resource|string|null $input
-     * @param int                  $timeout
+     * @param array<int, string>|string $command
+     * @param string                    $cwd
+     * @param array<int,string>         $env
+     * @param resource|string|null      $input
+     * @param int                       $timeout
      * @return $this
      */
     public function addShell($command, string $cwd = null, array $env = null, $input = null, int $timeout = 0): self
@@ -196,7 +199,7 @@ class Batch
     }
 
     /**
-     * @param $shellCommand
+     * @param array<int,mixed>|string $shellCommand
      * @return array|string
      */
     protected function prepareShellCommand($shellCommand)

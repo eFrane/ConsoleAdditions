@@ -147,10 +147,10 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
     }
 
     /**
-     * @param $message
-     * @param $newline
+     * @param string $message
+     * @param bool $newline
      */
-    protected function storeMessageForDebouncedWrite($message, $newline)
+    protected function storeMessageForDebouncedWrite(string $message, bool $newline)
     {
         array_push($this->debounceMessageCache, compact('message', 'newline'));
     }

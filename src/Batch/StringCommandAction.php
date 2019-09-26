@@ -7,7 +7,6 @@
 namespace EFrane\ConsoleAdditions\Batch;
 
 
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -21,9 +20,8 @@ class StringCommandAction extends CommandAction
     /**
      * StringCommandAction constructor.
      *
-     * @param Application $application
-     * @param string      $commandString
-     * @param array       $args
+     * @param string           $commandString
+     * @param array<int,mixed> $args
      */
     public function __construct(string $commandString, ...$args)
     {

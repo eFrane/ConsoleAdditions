@@ -22,11 +22,11 @@ use EFrane\ConsoleAdditions\Exception\FileOutputException;
 class NativeFileOutput extends FileOutput
 {
     /**
-     * @param $filename
+     * @param string $filename
      * @return resource file stream pointer
      * @throws FileOutputException if the file can not be opened
      */
-    public function loadFileStream($filename)
+    public function loadFileStream(string $filename)
     {
         $this->stream = fopen($filename, $this->getFileOpenMode());
 

@@ -37,8 +37,8 @@ interface FileOutputInterface
     const WRITE_MODE_RESET = 2048;
 
     /**
-     * @param $filename
+     * @param string $filename
      * @return resource a stream context
      */
-    public function loadFileStream($filename);
+    public function loadFileStream(string $filename);
 }

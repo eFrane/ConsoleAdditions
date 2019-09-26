@@ -65,10 +65,10 @@ class FlysystemFileOutput extends FileOutput
     }
 
     /**
-     * @param $filename
+     * @param string $filename
      * @return resource
      */
-    public function loadFileStream($filename)
+    public function loadFileStream(string $filename)
     {
         $this->stream = tmpfile();
 
@@ -78,5 +78,4 @@ class FlysystemFileOutput extends FileOutput
 
         return $this->stream;
     }
-
 }
