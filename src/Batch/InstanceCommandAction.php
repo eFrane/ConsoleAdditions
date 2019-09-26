@@ -27,12 +27,17 @@ class InstanceCommandAction extends CommandAction
     {
         $this->abortIfNoApplication();
 
+        $inputString = '';
+        if (method_exists($this->input, '__toString')) {
+            $inputString = $this->input->__toString();
+        }
+
         return trim(
             sprintf(
                 '%s %s %s',
                 $this->application->getName(),
                 $this->command->getName(),
-                $this->input
+                $inputString
             )
         );
     }
