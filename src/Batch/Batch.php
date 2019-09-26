@@ -168,7 +168,7 @@ class Batch
     /**
      * @param string             $commandWithSignature
      * @param array<int, string> $args
-     * @return $this;
+     * @return Batch
      */
     public function add(string $commandWithSignature, ...$args): self
     {
@@ -189,7 +189,7 @@ class Batch
      * @param array<int,string>         $env
      * @param resource|string|null      $input
      * @param int                       $timeout
-     * @return $this
+     * @return Batch
      */
     public function addShell($command, string $cwd = null, array $env = null, $input = null, int $timeout = 0): self
     {
@@ -265,7 +265,7 @@ class Batch
     /**
      * @param array|string $shellCommand
      * @param callable     $configurationCallback (Symfony\Component\Process\Process $process)
-     * @return $this
+     * @return self
      */
     public function addShellCb($shellCommand, callable $configurationCallback): self
     {
@@ -281,7 +281,7 @@ class Batch
     /**
      * @param Command        $command
      * @param InputInterface $input
-     * @return $this
+     * @return self
      */
     public function addCommandInstance(Command $command, InputInterface $input): self
     {
