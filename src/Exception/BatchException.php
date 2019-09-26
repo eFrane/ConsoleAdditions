@@ -33,7 +33,11 @@ class BatchException extends RuntimeException
         );
     }
 
-    public static function invalidShellCommandType(array $command): self
+    /**
+     * @param mixed $command
+     * @return BatchException
+     */
+    public static function invalidShellCommandType($command): self
     {
         return new self('Invalid shell command type, expected string or array, got: '.gettype($command));
     }

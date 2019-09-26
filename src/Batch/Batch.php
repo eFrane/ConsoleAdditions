@@ -200,9 +200,9 @@ class Batch
 
     /**
      * @param array<int,mixed>|string $shellCommand
-     * @return array|string
+     * @return array
      */
-    protected function prepareShellCommand($shellCommand)
+    protected function prepareShellCommand($shellCommand): array
     {
         if (!in_array(gettype($shellCommand), ['array', 'string'])) {
             throw BatchException::invalidShellCommandType($shellCommand);
