@@ -72,7 +72,9 @@ class ProcessAction implements Action
             }
         );
 
-        return $this->process->getExitCode();
+        $exitCode = $this->process->getExitCode();
+
+        return is_int($exitCode) ? $exitCode : -1;
     }
 
     public function __toString(): string

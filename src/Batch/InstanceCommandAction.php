@@ -17,10 +17,11 @@ class InstanceCommandAction extends CommandAction
     {
         $this->command = $command;
 
-        $this->input = $input;
         if (is_null($input)) {
-            $this->input = new ArrayInput([]);
+            $input = new ArrayInput([]);
         }
+
+        $this->input = $input;
     }
 
     public function __toString(): string

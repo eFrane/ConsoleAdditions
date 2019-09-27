@@ -55,21 +55,22 @@ class MultiplexedOutput implements OutputInterface
      * MultiplexedOutput constructor.
      * @param OutputInterface[]             $interfaces
      * @param int                           $verbosity
-     * @param bool|null                     $decorated
+     * @param bool                          $decorated
      * @param OutputFormatterInterface|null $formatter
      */
     public function __construct(
         array $interfaces,
-        $verbosity = self::VERBOSITY_NORMAL,
-        $decorated = null,
+        int $verbosity = self::VERBOSITY_NORMAL,
+        bool $decorated = false,
         OutputFormatterInterface $formatter = null
     ) {
         $this->verbosity = $verbosity;
-        $this->formatter = $formatter;
 
-        if (is_null($this->formatter)) {
-            $this->formatter = new OutputFormatter();
+        if (is_null($formatter)) {
+            $formatter = new OutputFormatter();
         }
+
+        $this->formatter = $formatter;
 
         foreach ($interfaces as $interface) {
             if (!is_a($interface, OutputInterface::class)) {
