@@ -1,5 +1,10 @@
 {
   "dependencies": {
-    "vuepress": "^1.0.3"
+    "husky": "^3.0.9",
+    "vuepress": "^1.2.0"
+  },
+  "scripts": {
+    "vuepress:dev": "vuepress dev docs",
+    "vuepress:build": "vuepress build docs"
   }
 }

@@ -1,4 +1,5 @@
 /vendor/
+/docs/.vuepress/dist
 composer.lock
 node_modules
 .phpunit.result.cache
