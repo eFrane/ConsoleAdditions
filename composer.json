@@ -13,7 +13,7 @@
     "phpunit/phpunit": "^6.4 || ^8.0",
     "league/flysystem": "^1.0",
     "symfony/process": ">=2.7",
-    "phpstan/phpstan": "^0.11.16"
+    "phpstan/phpstan": "^0.11.16 || ^0.12.0"
   },
   "license": "MIT",
   "authors": [
