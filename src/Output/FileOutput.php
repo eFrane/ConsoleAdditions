@@ -109,9 +109,12 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
     /**
      * Perform the stream write respecting the debounce settings
      *
+     * @param string $message
+     * @param bool $newline
+     *
      * @return void
      */
-    public function doWrite(string $message, bool $newline)
+    public function doWrite($message, $newline)
     {
         if ($this->shouldDoWriteImmediate()) {
             if (is_null($this->writeCallback)) {
