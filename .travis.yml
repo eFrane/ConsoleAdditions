@@ -1,17 +1,12 @@
 language: php
 
-cache:
-  directories:
-    - vendor/
-
 php:
   - '7.1'
   - '7.2'
   - '7.3'
 
 before_script:
-  - composer install --prefer-source --no-interaction --dev
-  - composer dump-autoload
+  - composer install --dev --no-interaction
 
 script:
   - vendor/bin/phpunit
