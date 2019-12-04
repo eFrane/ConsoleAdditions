@@ -7,8 +7,6 @@
 namespace EFrane\ConsoleAdditions\Batch;
 
 
-use Symfony\Component\Process\InputStream;
-
 /**
  * Class ShellAction
  *
@@ -21,11 +19,11 @@ class ShellAction extends ProcessAction
     /**
      * ShellAction constructor.
      *
-     * @param array  $command
-     * @param string $cwd
-     * @param array  $env
-     * @param mixed  $input
-     * @param int    $timeout
+     * @param array<int,string> $command
+     * @param string            $cwd
+     * @param array<int,string> $env
+     * @param mixed             $input
+     * @param int               $timeout
      */
     public function __construct(
         array $command,

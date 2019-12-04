@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ProcessAction implements Action
 {
     /**
-     * @var \Symfony\Component\Process\Process
+     * @var \Symfony\Component\Process\Process<int,string>
      */
     protected $process;
 
@@ -25,7 +25,7 @@ class ProcessAction implements Action
     /**
      * ProcessAction constructor.
      *
-     * @param \Symfony\Component\Process\Process $process
+     * @param \Symfony\Component\Process\Process<int,string> $process
      */
     public function __construct(\Symfony\Component\Process\Process $process)
     {
@@ -36,6 +36,8 @@ class ProcessAction implements Action
 
     /**
      * Checks whether symfony/process is available
+     *
+     * @return void
      * @throws BatchException
      */
     public function abortIfProcessNotAvailable()
@@ -48,7 +50,7 @@ class ProcessAction implements Action
     /**
      * Return process instance to allow customization
      *
-     * @return \Symfony\Component\Process\Process
+     * @return \Symfony\Component\Process\Process<int,string>
      */
     public function getProcess(): \Symfony\Component\Process\Process
     {
@@ -63,7 +65,7 @@ class ProcessAction implements Action
         $this->process->run(
             function ($type, $out) use ($output) {
                 if (\Symfony\Component\Process\Process::OUT === $type) {
-                   $output->write($out);
+                    $output->write($out);
                 }
 
                 if (\Symfony\Component\Process\Process::ERR === $type) {

@@ -10,7 +10,11 @@ namespace EFrane\ConsoleAdditions\Exception;
 
 class MultiplexedOutputException extends \RuntimeException
 {
-    public static function unsupportedInterfaceClass($object)
+    /**
+     * @param object $object
+     * @return MultiplexedOutputException
+     */
+    public static function unsupportedInterfaceClass($object): self
     {
         $className = get_class($object);
         return new self("{$className} must implement \\Symfony\\Components\\Console\\Output\\OutputInterface.");

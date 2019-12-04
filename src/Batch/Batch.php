@@ -122,6 +122,7 @@ class Batch
 
     /**
      * @param Exception $e
+     * @return void
      */
     protected function setLastException(Exception $e)
     {
@@ -138,6 +139,7 @@ class Batch
 
     /**
      * @param array|Action[] $actions
+     * @return void
      */
     public function setActions(array $actions)
     {
@@ -179,7 +181,7 @@ class Batch
         string $message,
         bool $newLine = true,
         int $verbosity = OutputInterface::VERBOSITY_NORMAL
-    ) {
+    ): self {
         return $this->addAction(new MessageAction($message, $newLine, $verbosity));
     }
 
@@ -200,7 +202,7 @@ class Batch
 
     /**
      * @param array<int,mixed>|string $shellCommand
-     * @return array
+     * @return array|string[]
      */
     protected function prepareShellCommand($shellCommand): array
     {
@@ -263,8 +265,8 @@ class Batch
     }
 
     /**
-     * @param array|string $shellCommand
-     * @param callable     $configurationCallback (Symfony\Component\Process\Process $process)
+     * @param array|string[]|string $shellCommand
+     * @param callable              $configurationCallback (Symfony\Component\Process\Process $process)
      * @return self
      */
     public function addShellCb($shellCommand, callable $configurationCallback): self

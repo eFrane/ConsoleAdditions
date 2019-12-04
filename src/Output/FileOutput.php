@@ -59,7 +59,7 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
     protected $debounceMilliseconds = 0;
 
     /**
-     * @var array messages that have been kept back during debouncing
+     * @var array<int,array<string,mixed>> messages that have been kept back during debouncing
      */
     protected $debounceMessageCache = [];
 
@@ -109,9 +109,9 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
     /**
      * Perform the stream write respecting the debounce settings
      *
-     * @inheritdoc
+     * @return void
      */
-    public function doWrite($message, $newline)
+    public function doWrite(string $message, bool $newline)
     {
         if ($this->shouldDoWriteImmediate()) {
             if (is_null($this->writeCallback)) {
@@ -143,6 +143,7 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
     /**
      * @param string $message
      * @param bool $newline
+     * @return void
      */
     protected function storeMessageForDebouncedWrite(string $message, bool $newline)
     {
@@ -165,6 +166,8 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
      * `doWrite` implementation as that flushes after each write. It
      * is much more efficient to write all messages to the stream first
      * and only flush it when done.
+     *
+     * @return void
      */
     protected function doDebouncedWrite()
     {
@@ -205,6 +208,7 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
      * Set the amount of milliseconds file writes are debounced
      *
      * @param int $debounceMilliseconds
+     * @return void
      */
     public function setDebounceMilliseconds($debounceMilliseconds)
     {
@@ -213,6 +217,7 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
 
     /**
      * @param \Closure|null $callback
+     * @return void
      */
     public function setWriteCallback(\Closure $callback = null)
     {

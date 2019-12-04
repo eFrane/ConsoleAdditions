@@ -7,6 +7,7 @@
 namespace EFrane\ConsoleAdditions\Batch;
 
 
+use EFrane\ConsoleAdditions\Exception\BatchException;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -40,6 +41,10 @@ class StringCommandAction extends CommandAction
         return parent::execute($output);
     }
 
+    /**
+     * @return void
+     * @throws BatchException
+     */
     public function createCommandFromString()
     {
         $this->abortIfNoApplication();
@@ -50,6 +55,10 @@ class StringCommandAction extends CommandAction
         $this->input = new StringInput($this->commandString);
     }
 
+    /**
+     * @return string
+     * @throws BatchException
+     */
     public function __toString(): string
     {
         $this->abortIfNoApplication();

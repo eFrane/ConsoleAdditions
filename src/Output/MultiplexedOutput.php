@@ -94,9 +94,12 @@ class MultiplexedOutput implements OutputInterface
     }
 
     /**
-     * @inheritdoc
+     * Pass write() call to all registered interfaces
+     *
+     * @param array<int,string> $messages
+     * @return void
      */
-    public function write($messages, $newline = false, $options = 0)
+    public function write($messages, bool $newline = false, int $options = 0)
     {
         foreach ($this->interfaces as $interface) {
             $interface->write($messages, $newline, $options);
@@ -104,9 +107,12 @@ class MultiplexedOutput implements OutputInterface
     }
 
     /**
-     * @inheritdoc
+     * Pass writeln() call to all registered interfaces
+     *
+     * @param array<int,string> $messages
+     * @return void
      */
-    public function writeln($messages, $options = 0)
+    public function writeln($messages, int $options = 0)
     {
         foreach ($this->interfaces as $interface) {
             $interface->writeln($messages, $options);
@@ -122,9 +128,12 @@ class MultiplexedOutput implements OutputInterface
     }
 
     /**
-     * @inheritdoc
+     * Set verbosity for all registered interfaces
+     *
+     * @param int $level OutputInterface Verbosity Level
+     * @return void
      */
-    public function setVerbosity($level)
+    public function setVerbosity(int $level)
     {
         $this->verbosity = $level;
 
@@ -166,9 +175,12 @@ class MultiplexedOutput implements OutputInterface
     }
 
     /**
-     * @inheritdoc
+     * Set decorated flag for all registered interfaces
+     *
+     * @param bool $decorated
+     * @return void
      */
-    public function setDecorated($decorated)
+    public function setDecorated(bool $decorated)
     {
         $this->formatter->setDecorated($decorated);
 
@@ -194,7 +206,10 @@ class MultiplexedOutput implements OutputInterface
     }
 
     /**
-     * @inheritdoc
+     * Set formatter for all registered interfaces
+     *
+     * @param OutputFormatterInterface $formatter
+     * @return void
      */
     public function setFormatter(OutputFormatterInterface $formatter)
     {

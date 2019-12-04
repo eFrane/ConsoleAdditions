@@ -52,6 +52,10 @@ abstract class CommandAction implements Action
         return $this;
     }
 
+    /**
+     * @return void
+     * @throws BatchException
+     */
     public function abortIfNoApplication()
     {
         if (!is_a($this->application, Application::class)) {
