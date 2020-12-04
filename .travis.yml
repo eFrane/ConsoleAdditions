@@ -1,13 +1,14 @@
 language: php
 
 php:
-  - '7.1'
-  - '7.2'
   - '7.3'
+  - '7.4'
+  - '8.0'
 
 before_script:
   - composer install --dev --no-interaction
 
 script:
   - vendor/bin/phpunit
-  - vendor/bin/phpstan analyse --level 7 src
+  - vendor/bin/phpstan analyse --level 8 src
+
