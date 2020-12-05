@@ -9,7 +9,7 @@ namespace EFrane\ConsoleAdditions\Output;
 
 
 use EFrane\ConsoleAdditions\Exception\FileOutputException;
-use League\Flysystem\FileNotFoundException;
+use Exception;
 use League\Flysystem\Filesystem;
 use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 
@@ -49,7 +49,7 @@ class FlysystemFileOutput extends FileOutput
                 }
 
                 $this->filesystem->write($this->filename, $message);
-            } catch (FileNotFoundException $e) {
+            } catch (Exception $e) {
                 throw FileOutputException::failedToOpenFileForWriting($this->filename);
             }
         };
