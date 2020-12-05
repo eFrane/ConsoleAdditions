@@ -15,6 +15,8 @@ class FlysystemFileOutputTest extends TestCase
 {
     public function testWritesToAdapter()
     {
+        $this->markTestSkipped('Flysystem integration is currently under reconsideration');
+
         if (class_exists('League\Flysystem\Adapter\NullAdapter')) {
             /* @var \PHPUnit_Framework_MockObject_MockObject|\League\Flysystem\Adapter\NullAdapter $adapter */
             $adapter = $this->createMock(\League\Flysystem\Adapter\NullAdapter::class);
