@@ -322,6 +322,13 @@ class Batch
         return $returnValue;
     }
 
+    public function resetApplication(): self
+    {
+        $this->application->reset();
+
+        return $this;
+    }
+
     /**
      * @param Action $action
      * @return int
