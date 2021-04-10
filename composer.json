@@ -7,12 +7,12 @@
     "multiplexed output"
   ],
   "require": {
-    "symfony/console": ">=3.4,<5.0"
+    "symfony/console": ">=3.4||^5.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.4 || ^8.0 || ^9.0",
     "league/flysystem": "^1.0 || ^2.0",
-    "symfony/process": ">=3.4,<5.0",
+    "symfony/process": ">=3.4||^5.0",
     "phpstan/phpstan": "^0.11.16 || ^0.12.0"
   },
   "license": "MIT",
