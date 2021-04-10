@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.2
+
+  * Many internal code style changes to increase the PHPStan Level
+  * Improved documentation
+  * Extended support range for symfony/console and symfony/process to 5.x
+
 ## 0.6.0
 
   * Fix output verbosities
