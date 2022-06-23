@@ -27,6 +27,7 @@ final class TestCommand extends Command
         $output->write('Hello '.$input->getArgument('name'));
 
         if ($input->getOption('throw-exception')) {
+            $output->write('Oops.');
             throw new RuntimeException('Testing exception cascading');
         }
 

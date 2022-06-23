@@ -88,7 +88,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @return OutputInterface[] the multiplexed interfaces
      */
-    public function getInterfaces()
+    public function getInterfaces(): array
     {
         return $this->interfaces;
     }
@@ -102,7 +102,7 @@ class MultiplexedOutput implements OutputInterface
      *
      * @return void
      */
-    public function write($messages, $newline = false, $options = 0)
+    public function write($messages, bool $newline = false, int $options = 0): void
     {
         foreach ($this->interfaces as $interface) {
             $interface->write($messages, $newline, $options);
