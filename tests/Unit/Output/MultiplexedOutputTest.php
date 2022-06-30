@@ -25,7 +25,7 @@ class MultiplexedOutputTest extends TestCase
         }
     }
 
-    public function testCreateWithOneInterface()
+    public function testCreateWithOneInterface(): void
     {
         $sut = new MultiplexedOutput([
             new NullOutput(),
@@ -35,7 +35,7 @@ class MultiplexedOutputTest extends TestCase
         $this->assertCount(1, $sut->getInterfaces());
     }
 
-    public function testCreateWithMultipleInterfaces()
+    public function testCreateWithMultipleInterfaces(): void
     {
         $sut = new MultiplexedOutput([
             new NativeFileOutput(self::TESTFILENAME),
@@ -45,7 +45,7 @@ class MultiplexedOutputTest extends TestCase
         $this->assertCount(2, $sut->getInterfaces());
     }
 
-    public function testWritesToAllInstances()
+    public function testWritesToAllInstances(): void
     {
         $consoleOutputMock = $this->createMock(ConsoleOutput::class);
         $consoleOutputMock->expects($this->once())->method('write');
@@ -61,7 +61,7 @@ class MultiplexedOutputTest extends TestCase
         $this->assertEquals('message', $content);
     }
 
-    public function testIsVerboseForAllVerbosities()
+    public function testIsVerboseForAllVerbosities(): void
     {
         $verbosities = [
             OutputInterface::VERBOSITY_VERBOSE,

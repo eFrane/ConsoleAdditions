@@ -49,6 +49,6 @@ class MessageAction implements Action
 
     public function __toString(): string
     {
-        return sprintf($this->message.$this->newLine ?? "\n");
+        return sprintf($this->message.($this->newLine ? "\n" : ''));
     }
 }

@@ -21,13 +21,13 @@ class NativeFileOutputTest extends TestCase
         }
     }
 
-    public function testUsesCorrectWriteMode()
+    public function testUsesCorrectWriteMode(): void
     {
         $sut = new NativeFileOutput(self::TESTFILENAME);
         $this->assertEquals('a+', $sut->getFileOpenMode());
     }
 
-    public function testWritesOutputToFile()
+    public function testWritesOutputToFile(): void
     {
         $sut = new NativeFileOutput(self::TESTFILENAME);
 
@@ -40,7 +40,7 @@ class NativeFileOutputTest extends TestCase
     /**
      * @depends testWritesOutputToFile
      */
-    public function testAppendsOutputByDefault()
+    public function testAppendsOutputByDefault(): void
     {
         $sut = new NativeFileOutput(self::TESTFILENAME);
         $sut->writeln('message1');
@@ -59,7 +59,7 @@ class NativeFileOutputTest extends TestCase
         $this->assertEquals($expectedLines, $lines);
     }
 
-    public function testResetsFileIfWriteModeIsReset()
+    public function testResetsFileIfWriteModeIsReset(): void
     {
         $sut = new NativeFileOutput(self::TESTFILENAME);
         $sut->write('message1');
@@ -71,14 +71,14 @@ class NativeFileOutputTest extends TestCase
         $this->assertEquals('message2', $content);
     }
 
-    public function testReportsIncorrectWriteMode()
+    public function testReportsIncorrectWriteMode(): void
     {
         $this->expectException(FileOutputException::class);
 
         new NativeFileOutput(self::TESTFILENAME, 512);
     }
 
-    public function testDebounces()
+    public function testDebounces(): void
     {
         $sut = new NativeFileOutput(self::TESTFILENAME);
         $sut->setDebounceMilliseconds(1000);

@@ -18,7 +18,7 @@ use Tests\TestCommand;
 
 class BatchTest extends BatchTestCase
 {
-    public function testAdd()
+    public function testAdd(): void
     {
         $sut = new Batch($this->app, $this->output);
         $sut->add('list');
@@ -40,7 +40,7 @@ class BatchTest extends BatchTestCase
         );
     }
 
-    public function testRunOne()
+    public function testRunOne(): void
     {
         $sut = new Batch($this->app, $this->output);
 
@@ -77,7 +77,7 @@ HD;
         $this->assertEquals($expected, $this->getOutput());
     }
 
-    public function testRun()
+    public function testRun(): void
     {
         $sut = new Batch($this->app, $this->output);
         $sut->setActions(
@@ -133,7 +133,7 @@ HD;
         $this->assertEquals($expected, $this->getOutput());
     }
 
-    public function testAddObject()
+    public function testAddObject(): void
     {
         $this->app->add(new TestCommand());
 
@@ -147,7 +147,7 @@ HD;
         $this->assertEquals('Hello Test', $this->getOutput());
     }
 
-    public function testAddMessage()
+    public function testAddMessage(): void
     {
         $sut = new Batch($this->app, $this->output);
         $sut->addMessage('Foo');
@@ -156,7 +156,7 @@ HD;
         $this->assertEquals("Foo\n", $this->getOutput());
     }
 
-    public function testRunCascadesCommandException()
+    public function testRunCascadesCommandException(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Testing exception cascading');
@@ -169,7 +169,7 @@ HD;
         $sut->run();
     }
 
-    public function testRunSilent()
+    public function testRunSilent(): void
     {
         $this->app->add(new TestCommand());
 
@@ -182,7 +182,7 @@ HD;
         $this->assertEquals('Testing exception cascading', $sut->getLastException()->getMessage());
     }
 
-    public function testAddShellAddsProcess()
+    public function testAddShellAddsProcess(): void
     {
         $sut = new Batch($this->app, $this->output);
         $sut->addShell(['echo', 'Hello', 'Shell']);
@@ -192,7 +192,7 @@ HD;
         $this->assertInstanceOf(Process::class, $sut->getActions()[0]->getProcess());
     }
 
-    public function testAddShellCbAddsConfiguredProcess()
+    public function testAddShellCbAddsConfiguredProcess(): void
     {
         $sut = new Batch($this->app, $this->output);
         $sut->addShellCb(
@@ -210,7 +210,7 @@ HD;
         $this->assertEquals('this/is/a/directory', $sut->getActions()[0]->getProcess()->getWorkingDirectory());
     }
 
-    public function testRunReturnsShellOutput()
+    public function testRunReturnsShellOutput(): void
     {
         $sut = new Batch($this->app, $this->output);
         $sut->addShell(['echo', 'this-is-output']);
@@ -219,7 +219,7 @@ HD;
         $this->assertEquals("this-is-output\n", $this->getOutput());
     }
 
-    public function testToStringForCommandStrings()
+    public function testToStringForCommandStrings(): void
     {
         $sut = new Batch($this->app, $this->output);
 
@@ -230,7 +230,7 @@ HD;
         $this->assertEquals("testApp info\ntestApp help\ntestApp info", strval($sut));
     }
 
-    public function testToStringForCommandInstances()
+    public function testToStringForCommandInstances(): void
     {
         $sut = new Batch($this->app, $this->output);
 
@@ -242,7 +242,7 @@ HD;
         $this->assertEquals("testApp testCommand\ntestApp testCommand --throw-exception FancyTestName", strval($sut));
     }
 
-    public function testAddTransparentVSprintf()
+    public function testAddTransparentVSprintf(): void
     {
         $sut = new Batch($this->app, $this->output);
 
@@ -253,7 +253,7 @@ HD;
         $this->assertEquals('testApp test', (string)$sut->getActions()[0]);
     }
 
-    public function testDoesNotKeepCommandState()
+    public function testDoesNotKeepCommandState(): void
     {
         $sut = new Batch($this->app, $this->output);
 
@@ -268,7 +268,7 @@ HD;
         $this->assertNotEquals($sut->getActions()[0], $sut->getActions()[1]);
     }
 
-    public function testOutputsErrors()
+    public function testOutputsErrors(): void
     {
         $sut = new Batch($this->app, $this->output);
 

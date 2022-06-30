@@ -15,14 +15,14 @@ use Tests\TestCommand;
 
 class InstanceCommandActionTest extends BatchTestCase
 {
-    public function testAcceptsInstance()
+    public function testAcceptsInstance(): void
     {
         $command = new TestCommand();
         $sut = new InstanceCommandAction($command, new StringInput(''));
         $this->assertInstanceOf(InstanceCommandAction::class, $sut);
     }
 
-    public function testExecutesCommand()
+    public function testExecutesCommand(): void
     {
         $sut = new InstanceCommandAction(new TestCommand(), new StringInput(''));
         $sut->execute($this->output);
@@ -30,7 +30,7 @@ class InstanceCommandActionTest extends BatchTestCase
         $this->assertEquals('Hello Test', $this->getOutput());
     }
 
-    public function testPassesInputToCommand()
+    public function testPassesInputToCommand(): void
     {
         $sut = new InstanceCommandAction(new TestCommand(), new StringInput('Input'));
         $sut->execute($this->output);
@@ -38,7 +38,7 @@ class InstanceCommandActionTest extends BatchTestCase
         $this->assertEquals('Hello Input', $this->getOutput());
     }
 
-    public function testDoesntCatchExceptions()
+    public function testDoesntCatchExceptions(): void
     {
         $this->expectException(RuntimeException::class);
 
@@ -46,7 +46,7 @@ class InstanceCommandActionTest extends BatchTestCase
         $sut->execute($this->output);
     }
 
-    public function testStringifiesWithoutArguments()
+    public function testStringifiesWithoutArguments(): void
     {
         $sut = new InstanceCommandAction(new TestCommand(), new StringInput(''));
         $sut->setApplication($this->app);
@@ -54,7 +54,7 @@ class InstanceCommandActionTest extends BatchTestCase
         $this->assertEquals('testApp testCommand', (string)$sut);
     }
 
-    public function testStringifiesWithArguments()
+    public function testStringifiesWithArguments(): void
     {
         $sut = new InstanceCommandAction(new TestCommand(), new StringInput('World'));
         $sut->setApplication($this->app);
@@ -67,7 +67,7 @@ class InstanceCommandActionTest extends BatchTestCase
         $this->assertEquals('testApp testCommand World', (string)$sut);
     }
 
-    public function testCanBeInstantiatedWithoutInput()
+    public function testCanBeInstantiatedWithoutInput(): void
     {
         $sut = new InstanceCommandAction(new TestCommand());
         $this->assertInstanceOf(InstanceCommandAction::class, $sut);

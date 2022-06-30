@@ -12,7 +12,7 @@ use Symfony\Component\Process\Process;
 
 class ProcessActionTest extends BatchTestCase
 {
-    public function testExecutes()
+    public function testExecutes(): void
     {
         $cwd = getcwd();
 
@@ -22,7 +22,7 @@ class ProcessActionTest extends BatchTestCase
         $this->assertEquals($cwd, trim($this->getOutput()));
     }
 
-    public function testStringifies()
+    public function testStringifies(): void
     {
         $sut = new ProcessAction(new Process(['pwd']));
         $this->assertEquals("'pwd'", (string)$sut);

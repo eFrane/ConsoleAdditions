@@ -13,7 +13,7 @@ use Tests\TestCommand;
 
 class StringCommandActionTest extends BatchTestCase
 {
-    public function testExecutesCommand()
+    public function testExecutesCommand(): void
     {
         $this->app->add(new TestCommand());
 
@@ -24,7 +24,7 @@ class StringCommandActionTest extends BatchTestCase
         $this->assertEquals('Hello Test', $this->getOutput());
     }
 
-    public function testExecuteFailsWithoutApplication()
+    public function testExecuteFailsWithoutApplication(): void
     {
         $this->expectException(BatchException::class);
 
@@ -32,7 +32,7 @@ class StringCommandActionTest extends BatchTestCase
         $sut->execute($this->output);
     }
 
-    public function testStringifiesOutputsCommandStringWithApp()
+    public function testStringifiesOutputsCommandStringWithApp(): void
     {
         $this->app->add(new TestCommand());
 

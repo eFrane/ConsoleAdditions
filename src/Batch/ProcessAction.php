@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ProcessAction implements Action
 {
     /**
-     * @var \Symfony\Component\Process\Process<int,string>
+     * @var \Symfony\Component\Process\Process
      */
     protected $process;
 
@@ -25,7 +25,7 @@ class ProcessAction implements Action
     /**
      * ProcessAction constructor.
      *
-     * @param \Symfony\Component\Process\Process<int,string> $process
+     * @param \Symfony\Component\Process\Process $process
      */
     public function __construct(\Symfony\Component\Process\Process $process)
     {
@@ -50,7 +50,7 @@ class ProcessAction implements Action
     /**
      * Return process instance to allow customization
      *
-     * @return \Symfony\Component\Process\Process<int,string>
+     * @return \Symfony\Component\Process\Process
      */
     public function getProcess(): \Symfony\Component\Process\Process
     {

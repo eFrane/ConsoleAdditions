@@ -18,7 +18,7 @@ class MessageActionTest extends BatchTestCase
      *
      * @dataProvider provideExecuteParameters
      */
-    public function testExecutesWithDifferentParameters($parameters, $expectedOutput)
+    public function testExecutesWithDifferentParameters($parameters, $expectedOutput): void
     {
         $sut = new MessageAction($parameters['message'], $parameters['newLine']);
         $sut->execute($this->output);
@@ -46,7 +46,7 @@ class MessageActionTest extends BatchTestCase
         ];
     }
 
-    public function testExecuteHonorsVerbosity()
+    public function testExecuteHonorsVerbosity(): void
     {
         $sut = new MessageAction('Message', false);
 

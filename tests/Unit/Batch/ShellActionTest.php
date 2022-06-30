@@ -11,7 +11,7 @@ use EFrane\ConsoleAdditions\Batch\ShellAction;
 
 class ShellActionTest extends BatchTestCase
 {
-    public function testExecutes()
+    public function testExecutes(): void
     {
         $cwd = getcwd();
 
