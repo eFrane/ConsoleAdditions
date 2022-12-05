@@ -39,7 +39,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @var int verbosity
      */
-    protected $verbosity = self::VERBOSITY_NORMAL;
+    protected int $verbosity = self::VERBOSITY_NORMAL;
 
     /**
      * @var OutputFormatterInterface
@@ -49,7 +49,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @var OutputInterface[]
      */
-    protected $interfaces = [];
+    protected array $interfaces = [];
 
     /**
      * MultiplexedOutput constructor.
@@ -116,7 +116,7 @@ class MultiplexedOutput implements OutputInterface
      * @param int $options
      * @return void
      */
-    public function writeln($messages, $options = 0)
+    public function writeln($messages, int $options = 0)
     {
         foreach ($this->interfaces as $interface) {
             $interface->writeln($messages, $options);
@@ -126,7 +126,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @inheritdoc
      */
-    public function getVerbosity()
+    public function getVerbosity(): int
     {
         return $this->verbosity;
     }
@@ -137,7 +137,7 @@ class MultiplexedOutput implements OutputInterface
      * @param int $level OutputInterface Verbosity Level
      * @return void
      */
-    public function setVerbosity($level)
+    public function setVerbosity(int $level)
     {
         $this->verbosity = $level;
 
@@ -149,7 +149,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @inheritdoc
      */
-    public function isQuiet()
+    public function isQuiet(): bool
     {
         return $this->verbosity === OutputInterface::VERBOSITY_QUIET;
     }
@@ -157,7 +157,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @inheritdoc
      */
-    public function isVerbose()
+    public function isVerbose(): bool
     {
         return $this->verbosity >= OutputInterface::VERBOSITY_VERBOSE;
     }
@@ -165,7 +165,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @inheritdoc
      */
-    public function isVeryVerbose()
+    public function isVeryVerbose(): bool
     {
         return $this->verbosity >= OutputInterface::VERBOSITY_VERY_VERBOSE;
     }
@@ -173,7 +173,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @inheritdoc
      */
-    public function isDebug()
+    public function isDebug(): bool
     {
         return $this->verbosity >= OutputInterface::VERBOSITY_DEBUG;
     }
@@ -184,7 +184,7 @@ class MultiplexedOutput implements OutputInterface
      * @param bool $decorated
      * @return void
      */
-    public function setDecorated($decorated)
+    public function setDecorated(bool $decorated)
     {
         $this->formatter->setDecorated($decorated);
 
@@ -196,7 +196,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @inheritdoc
      */
-    public function isDecorated()
+    public function isDecorated(): bool
     {
         return $this->formatter->isDecorated();
     }
