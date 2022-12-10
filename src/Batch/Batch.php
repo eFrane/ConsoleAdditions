@@ -43,25 +43,20 @@ use function strlen;
  */
 class Batch
 {
-    /**
-     * @var OutputInterface
-     */
-    protected $output = null;
+    protected OutputInterface $output;
 
     /**
      * @var array|Action[]
      */
-    protected $actions = [];
+    protected array $actions = [];
 
-    /**
-     * @var Application
-     */
-    protected $application;
+    protected Application $application;
 
-    /**
-     * @var Exception
-     */
-    protected $lastException;
+    protected ?Exception $lastException;
+
+    protected ReturnCodeStack $returnCodeStack;
+
+    protected bool $hasRun;
 
     /**
      * Batch constructor.
@@ -73,6 +68,7 @@ class Batch
     {
         $this->setOutput($output);
         $this->application = $application;
+        $this->returnCodeStack = new ReturnCodeStack();
     }
 
     /**
@@ -112,10 +108,7 @@ class Batch
         return $this->lastException instanceof Exception;
     }
 
-    /**
-     * @return Exception
-     */
-    public function getLastException(): Exception
+    public function getLastException(): ?Exception
     {
         return $this->lastException;
     }
@@ -245,13 +238,46 @@ class Batch
         $actionCount = count($this->actions);
         $this->output->writeln("Running {$actionCount} actions...", OutputInterface::VERBOSITY_VERBOSE);
 
-        $returnValue = 0;
+        // marking hasRun true before any actual run ensures exceptions will be output correctly
+        $this->hasRun = true;
 
         foreach ($this->actions as $action) {
-            $returnValue &= $this->runOne($action);
+            $this->returnCodeStack->push($this->runOne($action));
         }
 
-        return $returnValue;
+        return $this->returnCodeStack->getLastReturnCode();
+    }
+
+    /**
+     * Check if all actions from a `run()` or `runSilent()`
+     * did return successful.
+     *
+     * @return bool
+     */
+    public function allActionsSucceeded(): bool
+    {
+        return $this->returnCodeStack->allSuccessful();
+    }
+
+    /**
+     * Check if any action from a `run()` or `runSilent()`
+     * did return with an error (non-zero) code.
+     *
+     * @return bool
+     */
+    public function atLeastOneActionFailed(): bool
+    {
+        return $this->returnCodeStack->anyErrored();
+    }
+
+    /**
+     * Get all collected return codes in order of execution
+     *
+     * @return int[]
+     */
+    public function getAllReturnCodes(): array
+    {
+        return $this->returnCodeStack->all();
     }
 
     public function resetApplication(): self
@@ -262,6 +288,10 @@ class Batch
     }
 
     /**
+     * Run a single action
+     *
+     * **NOTE:** This method ignores the return code stack.
+     *
      * @param Action $action
      * @return int
      */

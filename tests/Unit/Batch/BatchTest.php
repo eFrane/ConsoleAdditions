@@ -10,6 +10,7 @@ namespace Tests\Unit\Batch;
 use EFrane\ConsoleAdditions\Batch\Batch;
 use EFrane\ConsoleAdditions\Batch\InstanceCommandAction;
 use EFrane\ConsoleAdditions\Batch\ProcessAction;
+use EFrane\ConsoleAdditions\Batch\ShellAction;
 use EFrane\ConsoleAdditions\Batch\StringCommandAction;
 use RuntimeException;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -214,9 +215,42 @@ HD;
     {
         $sut = new Batch($this->app, $this->output);
         $sut->addShell(['echo', 'this-is-output']);
+        $returnCode = $sut->run();
+
+        $this->assertEquals(0, $returnCode);
+        $this->assertEquals("this-is-output\n", $this->getOutput());
+    }
+
+    public function testRunReturnsLatestReturnCode(): void
+    {
+        $sut = new Batch($this->app, $this->output);
+
+        $sut->addShell(['test', '1', '-eq', '0']); # 1 != 0, returns 1
+        $sut->addShell(['test', '1', '-eq', '1']); # 1 == 1, returns 0
+
+        $returnCode = $sut->run();
+
+        $this->assertEquals(0, $returnCode);
+        $this->assertTrue($sut->atLeastOneActionFailed());
+        $this->assertFalse($sut->allActionsSucceeded());
+    }
+
+    public function testReturnCodesAreCorrect(): void
+    {
+        $sut = new Batch($this->app, $this->output);
+
+        $this->assertCount(0, $sut->getAllReturnCodes());
+
+        $sut->runOne(new ShellAction(['echo', 'Hello']));
+
+        $this->assertCount(0, $sut->getAllReturnCodes());
+
+        $sut->addShell(['test', '1', '-eq', '0']); # 1 != 0, returns 1
+        $sut->addShell(['test', '1', '-eq', '1']); # 1 == 1, returns 0
+
         $sut->run();
 
-        $this->assertEquals("this-is-output\n", $this->getOutput());
+        $this->assertEquals([1, 0], $sut->getAllReturnCodes());
     }
 
     public function testToStringForCommandStrings(): void
