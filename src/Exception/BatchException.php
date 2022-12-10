@@ -12,17 +12,6 @@ use RuntimeException;
 
 class BatchException extends RuntimeException
 {
-    /**
-     * @param array<string,mixed> $commandArray
-     * @return BatchException
-     */
-    public static function commandArrayFormatMismatch(array $commandArray): self
-    {
-        $arrayKeyList = implode(', ', array_keys($commandArray));
-
-        return new self("Expected array with keys 'command' and 'input', instead got these keys: {$arrayKeyList}");
-    }
-
     public static function missingSymfonyProcess(): self
     {
         return new self(
