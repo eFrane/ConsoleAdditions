@@ -2,6 +2,7 @@
 
 ## UNRELEASED
 
+* [**BC BREAK**] Remove support for Flysystem 1.x
 * [**BC BREAK**] Removed string argument parsing from Batch shell actions
 * [**BC BREAK**] Upgrade Dependencies to Symfony 6 (fixes #34)
 * [**BC BREAK**] Drop Support for PHP 7.1, 7.2 and 7.3
