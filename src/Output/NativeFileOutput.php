@@ -41,7 +41,7 @@ class NativeFileOutput extends FileOutput
     /**
      * Convert the file write mode constant to an fopen mode
      *
-     * @return string fopen()-conform write mode descriptor
+     * @return string `fopen()`-conform write mode descriptor
      */
     public function getFileOpenMode()
     {
