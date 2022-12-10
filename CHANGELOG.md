@@ -1,7 +1,8 @@
 # Changelog
 
 ## UNRELEASED
-  
+
+* [**BC BREAK**] Removed string argument parsing from Batch shell actions
 * [**BC BREAK**] Upgrade Dependencies to Symfony 6 (fixes #34)
 * [**BC BREAK**] Drop Support for PHP 7.1, 7.2 and 7.3
   * **WARNING** Support for PHP 7.4 will be dropped very soon

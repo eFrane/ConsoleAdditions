@@ -186,93 +186,25 @@ class Batch
     }
 
     /**
-     * @param array<int, string>|string $command
+     * @param array<int, string> $command
      * @param string                    $cwd
      * @param array<int,string>         $env
      * @param resource|string|null      $input
      * @param int                       $timeout
      * @return Batch
      */
-    public function addShell($command, string $cwd = null, array $env = null, $input = null, int $timeout = 0): self
+    public function addShell(array $command, string $cwd = null, array $env = null, $input = null, int $timeout = 0): self
     {
-        $command = $this->prepareShellCommand($command);
-
         return $this->addAction(new ShellAction($command, $cwd, $env, $input, $timeout));
     }
 
     /**
-     * @param array<int,mixed>|string $shellCommand
-     * @return array|string[]
-     */
-    protected function prepareShellCommand($shellCommand): array
-    {
-        if (!in_array(gettype($shellCommand), ['array', 'string'])) {
-            throw BatchException::invalidShellCommandType($shellCommand);
-        }
-
-        if (is_string($shellCommand)) {
-            trigger_error(
-                'Passing shell arguments as string is deprecated and will be removed in 0.7.0',
-                E_USER_DEPRECATED
-            );
-
-            /**
-             * This is StringInput::tokenize() which unfortunately is a private method.
-             * I do not like private methods.
-             *
-             * Maybe there will be a magical time when this can be replaced with
-             *
-             * $shellCommand = (new StringInput($shellCommand))->getTokens();
-             */
-            $tokens = [];
-
-            $length = strlen($shellCommand);
-            $cursor = 0;
-
-            while ($cursor < $length) {
-                if (preg_match('/\s+/A', $shellCommand, $match, 0, $cursor)) {
-                } elseif (preg_match(
-                    '/([^="\'\s]+?)(=?)('.StringInput::REGEX_QUOTED_STRING.'+)/A',
-                    $shellCommand,
-                    $match,
-                    0,
-                    $cursor
-                )) {
-                    $tokens[] = $match[1].$match[2].stripcslashes(
-                            str_replace(['"\'', '\'"', '\'\'', '""'], '', substr($match[3], 1, strlen($match[3]) - 2))
-                        );
-                } elseif (preg_match('/'.StringInput::REGEX_QUOTED_STRING.'/A', $shellCommand, $match, 0, $cursor)) {
-                    $tokens[] = stripcslashes(substr($match[0], 1, strlen($match[0]) - 2));
-                } elseif (preg_match('/'.StringInput::REGEX_STRING.'/A', $shellCommand, $match, 0, $cursor)) {
-                    $tokens[] = stripcslashes($match[1]);
-                } else {
-                    // should never happen
-                    throw new InvalidArgumentException(
-                        sprintf('Unable to parse input near "... %s ..."', substr($shellCommand, $cursor, 10))
-                    );
-                }
-
-                $cursor += strlen($match[0]);
-            }
-            /**
-             * End of StringInput::tokenize()
-             */
-
-            $shellCommand = $tokens;
-        }
-
-        return $shellCommand;
-    }
-
-    /**
-     * @param array|string[]|string $shellCommand
+     * @param array<int,string>|string[] $shellCommand
      * @param callable              $configurationCallback (Symfony\Component\Process\Process $process)
      * @return self
      */
-    public function addShellCb($shellCommand, callable $configurationCallback): self
+    public function addShellCb(array $shellCommand, callable $configurationCallback): self
     {
-        $shellCommand = $this->prepareShellCommand($shellCommand);
-
         $action = new ShellAction($shellCommand);
 
         call_user_func($configurationCallback, $action->getProcess());
