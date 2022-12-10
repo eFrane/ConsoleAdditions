@@ -220,7 +220,7 @@ class Batch
              * This is StringInput::tokenize() which unfortunately is a private method.
              * I do not like private methods.
              *
-             * Maybe there will be a mangical time when this can be replaced with
+             * Maybe there will be a magical time when this can be replaced with
              *
              * $shellCommand = (new StringInput($shellCommand))->getTokens();
              */
