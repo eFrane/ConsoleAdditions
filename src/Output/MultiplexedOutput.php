@@ -204,7 +204,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @inheritdoc
      */
-    public function getFormatter(): OutputFormatter
+    public function getFormatter(): OutputFormatterInterface
     {
         return $this->formatter;
     }
