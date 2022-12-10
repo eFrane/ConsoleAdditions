@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## 0.7.0
+
 * Rewrite return code handling for Batches (fixes #35)
   * Batches now always return the last recorded exit code
   * All collected exit codes can be requested via `Batch::getAllReturnCodes()`
