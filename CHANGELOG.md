@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+* Rewrite return code handling for Batches (fixes #35)
+  * Batches now always return the last recorded exit code
+  * All collected exit codes can be requested via `Batch::getAllReturnCodes()`
 * [**BC BREAK**] Remove support for Flysystem 1.x
 * [**BC BREAK**] Removed string argument parsing from Batch shell actions
 * [**BC BREAK**] Upgrade Dependencies to Symfony 6 (fixes #34)
