@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+* Bump maximum PHP version to 8
+* [**BC BREAK**] Drop Suport for PHP 7.4
+
 ## 0.7.0
 
 * Rewrite return code handling for Batches (fixes #35)
