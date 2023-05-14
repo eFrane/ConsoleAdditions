@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## 0.8.0
+
 * Bump maximum PHP version to 8
 * [**BC BREAK**] Drop Suport for PHP 7.4
 
