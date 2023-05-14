@@ -28,6 +28,7 @@ class StringCommandAction extends CommandAction
     {
         // transparent vsprintf
         if (count($args) > 0) {
+            /** @var array<bool|float|int|string|null> $args */
             $commandString = vsprintf($commandString, $args);
         }
 
