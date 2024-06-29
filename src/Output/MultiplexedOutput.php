@@ -61,7 +61,7 @@ class MultiplexedOutput implements OutputInterface
     public function __construct(
         array $interfaces,
         $verbosity = self::VERBOSITY_NORMAL,
-        $decorated = null,
+        $decorated = false,
         OutputFormatterInterface $formatter = null
     ) {
         $this->verbosity = $verbosity;
@@ -115,7 +115,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @inheritdoc
      */
-    public function getVerbosity()
+    public function getVerbosity(): int
     {
         return $this->verbosity;
     }
@@ -135,7 +135,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @inheritdoc
      */
-    public function isQuiet()
+    public function isQuiet(): bool
     {
         return $this->verbosity === OutputInterface::VERBOSITY_QUIET;
     }
@@ -143,7 +143,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @inheritdoc
      */
-    public function isVerbose()
+    public function isVerbose(): bool
     {
         return $this->verbosity >= OutputInterface::VERBOSITY_VERBOSE;
     }
@@ -151,7 +151,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @inheritdoc
      */
-    public function isVeryVerbose()
+    public function isVeryVerbose(): bool
     {
         return $this->verbosity >= OutputInterface::VERBOSITY_VERY_VERBOSE;
     }
@@ -159,7 +159,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @inheritdoc
      */
-    public function isDebug()
+    public function isDebug(): bool
     {
         return $this->verbosity >= OutputInterface::VERBOSITY_DEBUG;
     }
@@ -179,7 +179,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @inheritdoc
      */
-    public function isDecorated()
+    public function isDecorated(): bool
     {
         return $this->formatter->isDecorated();
     }
@@ -187,7 +187,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @inheritdoc
      */
-    public function getFormatter()
+    public function getFormatter(): OutputFormatterInterface
     {
         return $this->formatter;
     }
