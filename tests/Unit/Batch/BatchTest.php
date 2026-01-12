@@ -316,4 +316,22 @@ HD;
 
         $this->assertEquals('Hello FooOops.', $this->getOutput());
     }
+
+    public function testHasExceptionReturnsFalseBeforeRun(): void
+    {
+        $sut = new Batch($this->app, $this->output);
+
+        $this->assertFalse($sut->hasException());
+        $this->assertNull($sut->getLastException());
+    }
+
+    public function testHasExceptionReturnsFalseAfterSuccessfulRun(): void
+    {
+        $sut = new Batch($this->app, $this->output);
+        $sut->addMessage('test');
+        $sut->run();
+
+        $this->assertFalse($sut->hasException());
+        $this->assertNull($sut->getLastException());
+    }
 }

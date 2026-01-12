@@ -52,11 +52,11 @@ class Batch
 
     protected Application $application;
 
-    protected ?Exception $lastException;
+    protected ?Exception $lastException = null;
 
     protected ReturnCodeStack $returnCodeStack;
 
-    protected bool $hasRun;
+    protected bool $hasRun = false;
 
     /**
      * Batch constructor.
