@@ -2,6 +2,10 @@
 
 ## UNRELEASED
 
+## 0.8.1
+
+- Fix: Initialize typed properties with default values
+
 ## 0.8.0
 
 * Bump maximum PHP version to 8
