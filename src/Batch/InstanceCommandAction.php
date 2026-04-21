@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 
 class InstanceCommandAction extends CommandAction
 {
-    public function __construct(Command $command, InputInterface $input = null)
+    public function __construct(Command $command, ?InputInterface $input = null)
     {
         $this->command = $command;
 

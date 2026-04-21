@@ -80,8 +80,8 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
         string $filename,
         int $writeMode = self::WRITE_MODE_APPEND,
         int $verbosity = self::VERBOSITY_NORMAL,
-        bool $decorated = null,
-        OutputFormatterInterface $formatter = null
+        ?bool $decorated = null,
+        ?OutputFormatterInterface $formatter = null
     ) {
         $this->writeMode = $writeMode;
         $this->filename = $filename;
@@ -222,7 +222,7 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
      * @param \Closure|null $callback
      * @return void
      */
-    public function setWriteCallback(\Closure $callback = null)
+    public function setWriteCallback(?\Closure $callback = null)
     {
         $this->writeCallback = $callback;
     }
