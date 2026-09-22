@@ -111,12 +111,8 @@ class MultiplexedOutput implements OutputInterface
 
     /**
      * Pass writeln() call to all registered interfaces
-     *
-     * @param array<int,string> $messages
-     * @param int $options
-     * @return void
      */
-    public function writeln($messages, int $options = 0)
+    public function writeln(string|iterable $messages, int $options = 0): void
     {
         foreach ($this->interfaces as $interface) {
             $interface->writeln($messages, $options);
@@ -135,9 +131,8 @@ class MultiplexedOutput implements OutputInterface
      * Set verbosity for all registered interfaces
      *
      * @param int $level OutputInterface Verbosity Level
-     * @return void
      */
-    public function setVerbosity(int $level)
+    public function setVerbosity(int $level): void
     {
         $this->verbosity = $level;
 
@@ -182,9 +177,8 @@ class MultiplexedOutput implements OutputInterface
      * Set decorated flag for all registered interfaces
      *
      * @param bool $decorated
-     * @return void
      */
-    public function setDecorated(bool $decorated)
+    public function setDecorated(bool $decorated): void
     {
         $this->formatter->setDecorated($decorated);
 
@@ -213,9 +207,8 @@ class MultiplexedOutput implements OutputInterface
      * Set formatter for all registered interfaces
      *
      * @param OutputFormatterInterface $formatter
-     * @return void
      */
-    public function setFormatter(OutputFormatterInterface $formatter)
+    public function setFormatter(OutputFormatterInterface $formatter): void
     {
         $this->formatter = $formatter;
 
