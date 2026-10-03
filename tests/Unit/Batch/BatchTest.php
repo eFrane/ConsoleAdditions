@@ -19,6 +19,18 @@ use Tests\TestCommand;
 
 class BatchTest extends BatchTestCase
 {
+    /**
+     * The wording/options of the default `--quiet` flag differ between
+     * symfony/console major versions (7.x added `--silent` and reworded
+     * `--quiet`). Strip that line so these fixtures stay valid across the
+     * versions this package supports, since it's not what these tests
+     * are actually verifying.
+     */
+    private static function stripQuietOptionLine(string $text): string
+    {
+        return preg_replace('/^\s*(-q, --quiet|--silent)\s.*\n/m', '', $text);
+    }
+
     public function testAdd(): void
     {
         $sut = new Batch($this->app, $this->output);
@@ -62,7 +74,6 @@ Usage:
 
 Options:
   -h, --help            Display help for the given command. When no command is given display help for the list command
-  -q, --quiet           Do not output any message
   -V, --version         Display this application version
       --ansi|--no-ansi  Force (or disable --no-ansi) ANSI output
   -n, --no-interaction  Do not ask any interactive question
@@ -75,7 +86,7 @@ Available commands:
 
 HD;
 
-        $this->assertEquals($expected, $this->getOutput());
+        $this->assertEquals($expected, self::stripQuietOptionLine($this->getOutput()));
     }
 
     public function testRun(): void
@@ -101,7 +112,6 @@ Usage:
 
 Options:
   -h, --help            Display help for the given command. When no command is given display help for the list command
-  -q, --quiet           Do not output any message
   -V, --version         Display this application version
       --ansi|--no-ansi  Force (or disable --no-ansi) ANSI output
   -n, --no-interaction  Do not ask any interactive question
@@ -118,7 +128,6 @@ Usage:
 
 Options:
   -h, --help            Display help for the given command. When no command is given display help for the list command
-  -q, --quiet           Do not output any message
   -V, --version         Display this application version
       --ansi|--no-ansi  Force (or disable --no-ansi) ANSI output
   -n, --no-interaction  Do not ask any interactive question
@@ -131,7 +140,7 @@ Available commands:
 
 HD;
 
-        $this->assertEquals($expected, $this->getOutput());
+        $this->assertEquals($expected, self::stripQuietOptionLine($this->getOutput()));
     }
 
     public function testAddObject(): void

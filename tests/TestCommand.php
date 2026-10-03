@@ -22,7 +22,7 @@ final class TestCommand extends Command
         $this->addArgument('name', InputArgument::OPTIONAL, '', 'Test');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->write('Hello '.$input->getArgument('name'));
 
