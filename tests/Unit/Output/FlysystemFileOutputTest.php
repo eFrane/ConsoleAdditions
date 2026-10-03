@@ -13,25 +13,8 @@ use Tests\TestCase;
 
 class FlysystemFileOutputTest extends TestCase
 {
-    public function testWritesToAdapter()
+    public function testWritesToAdapter(): void
     {
         $this->markTestSkipped('Flysystem integration is currently under reconsideration');
-
-        if (class_exists('League\Flysystem\Adapter\NullAdapter')) {
-            /* @var \PHPUnit_Framework_MockObject_MockObject|\League\Flysystem\Adapter\NullAdapter $adapter */
-            $adapter = $this->createMock(\League\Flysystem\Adapter\NullAdapter::class);
-            $adapter->expects($this->once())->method('write');
-        }
-
-        if (class_exists('League\Flysystem\InMemory\InMemoryFilesystemAdapter')) {
-            /* @var \PHPUnit_Framework_MockObject_MockObject|\League\Flysystem\InMemory\InMemoryFilesystemAdapter $adapter */
-            $adapter = $this->createMock(\League\Flysystem\InMemory\InMemoryFilesystemAdapter::class);
-            $adapter->expects($this->once())->method('write');
-        }
-
-        $filesystem = new Filesystem($adapter);
-
-        $sut = new FlysystemFileOutput($filesystem, 'dummyfile');
-        $sut->write('message');
     }
 }

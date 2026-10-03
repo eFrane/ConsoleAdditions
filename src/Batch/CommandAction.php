@@ -58,7 +58,7 @@ abstract class CommandAction implements Action
      */
     public function abortIfNoApplication()
     {
-        if (!is_a($this->application, Application::class)) {
+        if (!$this->application instanceof Application) {
             throw BatchException::applicationMustNotBeNull();
         }
     }

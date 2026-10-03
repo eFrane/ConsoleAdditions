@@ -13,12 +13,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 class MessageActionTest extends BatchTestCase
 {
     /**
-     * @param $parameters
-     * @param $expectedOutput
+     * @param array<string, mixed> $parameters
+     * @param string $expectedOutput
      *
      * @dataProvider provideExecuteParameters
      */
-    public function testExecutesWithDifferentParameters($parameters, $expectedOutput): void
+    public function testExecutesWithDifferentParameters(array $parameters, string $expectedOutput): void
     {
         $sut = new MessageAction($parameters['message'], $parameters['newLine']);
         $sut->execute($this->output);
@@ -26,6 +26,9 @@ class MessageActionTest extends BatchTestCase
         $this->assertEquals($expectedOutput, $this->getOutput());
     }
 
+    /**
+     * @return array<int, array{0: array<string, mixed>, 1: string}>
+     */
     public function provideExecuteParameters(): array
     {
         return [

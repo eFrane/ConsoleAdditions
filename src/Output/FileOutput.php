@@ -34,10 +34,7 @@ use Symfony\Component\Console\Output\StreamOutput;
  */
 abstract class FileOutput extends StreamOutput implements FileOutputInterface
 {
-    /**
-     * @var string filename to write to
-     */
-    protected $filename = '';
+    protected string $filename = '';
 
     /**
      * Overriding the StreamOutput stream to be able to set it
@@ -47,31 +44,18 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
      */
     protected $stream;
 
-    /**
-     * @var int write mode
-     * @see FileOutputInterface
-     */
-    protected $writeMode = self::WRITE_MODE_APPEND;
+    protected int $writeMode = self::WRITE_MODE_APPEND;
 
-    /**
-     * @var int number of milliseconds writes are debounced
-     */
-    protected $debounceMilliseconds = 0;
+    protected int $debounceMilliseconds = 0;
 
     /**
      * @var array<int,array<string,mixed>> messages that have been kept back during debouncing
      */
-    protected $debounceMessageCache = [];
+    protected array $debounceMessageCache = [];
 
-    /**
-     * @var float unix micro time of last write
-     */
-    protected $debounceLastWrite = 0.0;
+    protected float $debounceLastWrite = 0.0;
 
-    /**
-     * @var null|\Closure callback to pass actual stream write to if set
-     */
-    protected $writeCallback = null;
+    protected ?\Closure $writeCallback = null;
 
     /**
      * FileOutput constructor.
@@ -148,10 +132,7 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
         array_push($this->debounceMessageCache, compact('message', 'newline'));
     }
 
-    /**
-     * @return bool
-     */
-    protected function shouldDoWriteDebounced()
+    protected function shouldDoWriteDebounced(): bool
     {
         $possibleWriteTime = $this->debounceLastWrite + ($this->debounceMilliseconds / 1000);
 
@@ -164,10 +145,8 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
      * `doWrite` implementation as that flushes after each write. It
      * is much more efficient to write all messages to the stream first
      * and only flush it when done.
-     *
-     * @return void
      */
-    protected function doDebouncedWrite()
+    protected function doDebouncedWrite(): void
     {
         while (0 < count($this->debounceMessageCache)) {
             list($message, $newline) = array_values(array_shift($this->debounceMessageCache));
@@ -204,20 +183,13 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
 
     /**
      * Set the amount of milliseconds file writes are debounced
-     *
-     * @param int $debounceMilliseconds
-     * @return void
      */
-    public function setDebounceMilliseconds($debounceMilliseconds)
+    public function setDebounceMilliseconds(int $debounceMilliseconds): void
     {
         $this->debounceMilliseconds = $debounceMilliseconds;
     }
 
-    /**
-     * @param \Closure|null $callback
-     * @return void
-     */
-    public function setWriteCallback(?\Closure $callback = null)
+    public function setWriteCallback(?\Closure $callback = null): void
     {
         $this->writeCallback = $callback;
     }

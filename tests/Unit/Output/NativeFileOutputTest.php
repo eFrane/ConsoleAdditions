@@ -48,7 +48,9 @@ class NativeFileOutputTest extends TestCase
         $sut = new NativeFileOutput(self::TESTFILENAME);
         $sut->writeln('message2');
 
-        $lines = explode("\n", file_get_contents(self::TESTFILENAME));
+        $content = file_get_contents(self::TESTFILENAME);
+        $this->assertIsString($content);
+        $lines = explode("\n", $content);
         $expectedLines = [
             'message1',
             'message2',

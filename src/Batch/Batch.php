@@ -134,11 +134,11 @@ class Batch
      * @param array|Action[] $actions
      * @return void
      */
-    public function setActions(array $actions)
+    public function setActions(array $actions): void
     {
         foreach ($actions as $action) {
-            if (!is_a($action, Action::class)) {
-                BatchException::invalidActionSet();
+            if (!$action instanceof Action) {
+                throw BatchException::invalidActionSet();
             }
 
             $this->addAction($action);
@@ -180,13 +180,13 @@ class Batch
 
     /**
      * @param array<int, string> $command
-     * @param string                    $cwd
-     * @param array<int,string>         $env
+     * @param string|null       $cwd
+     * @param array<int,string> $env
      * @param resource|string|null      $input
      * @param int                       $timeout
      * @return Batch
      */
-    public function addShell(array $command, string $cwd = null, array $env = null, $input = null, int $timeout = 0): self
+    public function addShell(array $command, ?string $cwd = null, ?array $env = null, $input = null, int $timeout = 0): self
     {
         return $this->addAction(new ShellAction($command, $cwd, $env, $input, $timeout));
     }

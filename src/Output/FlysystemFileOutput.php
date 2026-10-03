@@ -37,8 +37,8 @@ class FlysystemFileOutput extends FileOutput
         string $filename,
         int $writeMode = self::WRITE_MODE_APPEND,
         int $verbosity = self::VERBOSITY_NORMAL,
-        bool $decorated = null,
-        OutputFormatterInterface $formatter = null
+        ?bool $decorated = null,
+        ?OutputFormatterInterface $formatter = null
     ) {
         $this->filesystem = $filesystem;
 

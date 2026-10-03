@@ -28,7 +28,7 @@ class BatchTest extends BatchTestCase
      */
     private static function stripQuietOptionLine(string $text): string
     {
-        return preg_replace('/^\s*(-q, --quiet|--silent)\s.*\n/m', '', $text);
+        return (string)preg_replace('/^\s*(-q, --quiet|--silent)\s.*\n/m', '', $text);
     }
 
     public function testAdd(): void
@@ -37,10 +37,6 @@ class BatchTest extends BatchTestCase
         $sut->add('list');
 
         $this->assertEquals(1, count($sut->getActions()));
-
-        if (PHP_MAJOR_VERSION >= 7 && PHP_MINOR_VERSION >= 3) {
-            $this->assertIsArray($sut->getActions());
-        }
 
         $sut->add('help');
 
@@ -189,7 +185,7 @@ HD;
         $sut->runSilent();
 
         $this->assertTrue($sut->hasException());
-        $this->assertEquals('Testing exception cascading', $sut->getLastException()->getMessage());
+        $this->assertEquals('Testing exception cascading', $sut->getLastException()?->getMessage());
     }
 
     public function testAddShellAddsProcess(): void

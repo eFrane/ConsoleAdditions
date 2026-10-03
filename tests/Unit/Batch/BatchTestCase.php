@@ -44,6 +44,6 @@ abstract class BatchTestCase extends \PHPUnit\Framework\TestCase
 
     protected function getOutput(): string
     {
-        return file_get_contents(self::TEST_OUTPUT_FILENAME);
+        return file_get_contents(self::TEST_OUTPUT_FILENAME) ?: '';
     }
 }

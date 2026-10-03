@@ -39,12 +39,10 @@ class MultiplexedOutput implements OutputInterface
     /**
      * @var int verbosity
      */
+    /** @phpstan-var 8|16|32|64|128|256 */
     protected int $verbosity = self::VERBOSITY_NORMAL;
 
-    /**
-     * @var OutputFormatterInterface
-     */
-    protected $formatter = null;
+    protected OutputFormatterInterface $formatter;
 
     /**
      * @var OutputInterface[]
@@ -53,16 +51,14 @@ class MultiplexedOutput implements OutputInterface
 
     /**
      * MultiplexedOutput constructor.
-     * @param OutputInterface[]             $interfaces
-     * @param int                           $verbosity
-     * @param bool                          $decorated
-     * @param OutputFormatterInterface|null $formatter
+     * @param OutputInterface[] $interfaces
+     * @phpstan-param 8|16|32|64|128|256 $verbosity
      */
     public function __construct(
         array $interfaces,
         int $verbosity = self::VERBOSITY_NORMAL,
         bool $decorated = false,
-        OutputFormatterInterface $formatter = null
+        ?OutputFormatterInterface $formatter = null
     ) {
         $this->verbosity = $verbosity;
 
@@ -73,7 +69,7 @@ class MultiplexedOutput implements OutputInterface
         $this->formatter = $formatter;
 
         foreach ($interfaces as $interface) {
-            if (!is_a($interface, OutputInterface::class)) {
+            if (!$interface instanceof OutputInterface) {
                 throw MultiplexedOutputException::unsupportedInterfaceClass($interface);
             }
 
@@ -95,14 +91,9 @@ class MultiplexedOutput implements OutputInterface
 
     /**
      * Pass write() call to all registered interfaces
-     *
-     * @param array<int,string> $messages
-     * @param bool $newline
-     * @param int $options
-     *
-     * @return void
+     * @phpstan-param string|iterable<string> $messages
      */
-    public function write($messages, bool $newline = false, int $options = 0): void
+    public function write(string|iterable $messages, bool $newline = false, int $options = 0): void
     {
         foreach ($this->interfaces as $interface) {
             $interface->write($messages, $newline, $options);
@@ -111,6 +102,7 @@ class MultiplexedOutput implements OutputInterface
 
     /**
      * Pass writeln() call to all registered interfaces
+     * @phpstan-param string|iterable<string> $messages
      */
     public function writeln(string|iterable $messages, int $options = 0): void
     {
@@ -121,6 +113,7 @@ class MultiplexedOutput implements OutputInterface
 
     /**
      * @inheritdoc
+     * @phpstan-return 8|16|32|64|128|256
      */
     public function getVerbosity(): int
     {
@@ -130,7 +123,7 @@ class MultiplexedOutput implements OutputInterface
     /**
      * Set verbosity for all registered interfaces
      *
-     * @param int $level OutputInterface Verbosity Level
+     * @phpstan-param 8|16|32|64|128|256 $level
      */
     public function setVerbosity(int $level): void
     {
@@ -175,8 +168,6 @@ class MultiplexedOutput implements OutputInterface
 
     /**
      * Set decorated flag for all registered interfaces
-     *
-     * @param bool $decorated
      */
     public function setDecorated(bool $decorated): void
     {
@@ -205,8 +196,6 @@ class MultiplexedOutput implements OutputInterface
 
     /**
      * Set formatter for all registered interfaces
-     *
-     * @param OutputFormatterInterface $formatter
      */
     public function setFormatter(OutputFormatterInterface $formatter): void
     {

@@ -20,15 +20,15 @@ class ShellAction extends ProcessAction
      * ShellAction constructor.
      *
      * @param array<int,string> $command
-     * @param string            $cwd
+     * @param string|null       $cwd
      * @param array<int,string> $env
      * @param mixed             $input
      * @param int               $timeout
      */
     public function __construct(
         array $command,
-        string $cwd = null,
-        array $env = null,
+        ?string $cwd = null,
+        ?array $env = null,
         $input = null,
         int $timeout = 0
     ) {

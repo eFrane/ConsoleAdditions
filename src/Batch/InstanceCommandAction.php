@@ -29,7 +29,7 @@ class InstanceCommandAction extends CommandAction
         $this->abortIfNoApplication();
 
         $inputString = '';
-        if (method_exists($this->input, '__toString')) {
+        if (is_callable([$this->input, '__toString'])) {
             $inputString = $this->input->__toString();
         }
 
