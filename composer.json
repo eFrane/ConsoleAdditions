@@ -7,7 +7,7 @@
     "multiplexed output"
   ],
   "require": {
-    "php": ">=8.0,<9",
+    "php": ">=8.2,<9",
     "symfony/console": "^6.0 || ^7.0"
   },
   "require-dev": {

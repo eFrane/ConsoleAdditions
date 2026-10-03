@@ -11,18 +11,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MessageAction implements Action
 {
-    /**
-     * @var string
-     */
-    protected $message;
-    /**
-     * @var bool
-     */
-    protected $newLine;
-    /**
-     * @var int
-     */
-    protected $verbosity;
+    protected string $message;
+    protected bool $newLine;
+    protected int $verbosity;
 
     /**
      * MessageAction constructor.

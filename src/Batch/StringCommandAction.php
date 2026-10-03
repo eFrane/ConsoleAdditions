@@ -13,10 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class StringCommandAction extends CommandAction
 {
-    /**
-     * @var string
-     */
-    protected $commandString;
+    protected string $commandString;
 
     /**
      * StringCommandAction constructor.
@@ -52,6 +49,7 @@ class StringCommandAction extends CommandAction
 
         $commandName = explode(' ', $this->commandString, 2)[0];
 
+        // @phpstan-ignore-next-line - $application is guaranteed to be set by abortIfNoApplication()
         $this->command = $this->application->get($commandName);
         $this->input = new StringInput($this->commandString);
     }
@@ -67,6 +65,7 @@ class StringCommandAction extends CommandAction
         return trim(
             sprintf(
                 '%s %s',
+                // @phpstan-ignore-next-line - $application is guaranteed to be set by abortIfNoApplication()
                 $this->application->getName(),
                 $this->commandString
             )

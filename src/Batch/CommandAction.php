@@ -16,20 +16,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class CommandAction implements Action
 {
-    /**
-     * @var Application
-     */
-    protected $application;
+    protected ?Application $application = null;
 
-    /**
-     * @var Command
-     */
-    protected $command;
+    protected ?Command $command = null;
 
-    /**
-     * @var InputInterface
-     */
-    protected $input = null;
+    protected ?InputInterface $input = null;
 
     /**
      * @param OutputInterface $output
@@ -38,6 +29,7 @@ abstract class CommandAction implements Action
      */
     public function execute(OutputInterface $output): int
     {
+        // @phpstan-ignore-next-line - $command and $input are set by child classes before calling parent::execute()
         return $this->command->run($this->input, $output);
     }
 

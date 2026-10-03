@@ -12,15 +12,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProcessAction implements Action
 {
-    /**
-     * @var \Symfony\Component\Process\Process
-     */
-    protected $process;
+    protected \Symfony\Component\Process\Process $process;
 
-    /**
-     * @var string
-     */
-    protected $stderr;
+    protected string $stderr;
 
     /**
      * ProcessAction constructor.

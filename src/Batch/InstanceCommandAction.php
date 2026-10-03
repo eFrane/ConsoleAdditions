@@ -36,7 +36,9 @@ class InstanceCommandAction extends CommandAction
         return trim(
             sprintf(
                 '%s %s %s',
+                // @phpstan-ignore-next-line - $application is guaranteed to be set by abortIfNoApplication()
                 $this->application->getName(),
+                // @phpstan-ignore-next-line - $command is guaranteed to be set by constructor
                 $this->command->getName(),
                 $inputString
             )

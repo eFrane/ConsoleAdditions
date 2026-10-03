@@ -39,10 +39,9 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
     /**
      * Overriding the StreamOutput stream to be able to set it
      *
-     * @var resource
-     * @inheritdoc
+     * @phpstan-var resource
      */
-    protected $stream;
+    protected mixed $stream;
 
     protected int $writeMode = self::WRITE_MODE_APPEND;
 

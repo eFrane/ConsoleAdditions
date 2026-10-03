@@ -24,10 +24,7 @@ use Symfony\Component\Console\Formatter\OutputFormatterInterface;
  */
 class FlysystemFileOutput extends FileOutput
 {
-    /**
-     * @var Filesystem
-     */
-    protected $filesystem;
+    protected Filesystem $filesystem;
 
     /**
      * FlysystemFileOutput constructor.

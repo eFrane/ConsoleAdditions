@@ -2,6 +2,7 @@
 
 ## UNRELEASED
 
+- **BREAKING**: Drop support for PHP <8.2
 - Add Symfony 7 support: update composer.json to allow symfony/console and symfony/process ^7.0, add compatible type declarations to overrides
 - Bump phpstan/phpstan from ^1.0.0 to ^2.0.0 and fix all level 8 static analysis errors
 - Add native PHP type declarations to properties and methods, replacing PHPDoc where possible
