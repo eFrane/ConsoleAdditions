@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ page.description | default: site.description }}">
+    <title>{{ page.title | default: site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/styles.css' | relative_url }}">
+    {% if site.url %}
+    <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+    {% endif %}
+</head>
+<body>
+    <div class="hero">
+        <div class="container">
+            <h1>{{ page.title | default: site.title }}</h1>
+            <p class="tagline">{{ site.description }}</p>
+            <p class="description">
+                This is a library building on top of <a href="https://symfony.com">Symfony</a>'s 
+                wonderful <a href="https://symfony.com/doc/current/components/console.html">Console</a> component.
+            </p>
+            <a href="quickstart.html" class="action-button">Get started!</a>
+        </div>
+    </div>
+
+    {% include footer.html %}
+</body>
+</html>

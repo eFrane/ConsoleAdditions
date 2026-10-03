@@ -1,0 +1,50 @@
+# Jekyll Configuration for Console Additions
+
+# Site settings
+name: Console Additions
+title: Console Additions
+description: Missing tools for the 20% - Helper Classes for Symfony Console
+url: "https://symfony-console-additions.efrane.com"
+baseurl: ""
+
+# Build settings
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
+
+theme: null
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - README.md
+  - .gitignore
+  - .git
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "default"
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+  - scope:
+      path: "index.md"
+    values:
+      layout: "home"
+
+# Plugins
+plugins: []
+
+# Plugins (GitHub Pages only supports a limited set)
+# plugins:
+#   - jekyll-feed

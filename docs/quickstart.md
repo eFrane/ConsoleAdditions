@@ -1,8 +1,7 @@
 ---
-sidebar: 'auto'
+layout: page
+title: Getting Started
 ---
-
-# Getting started
 
 ## Command Batches
 
@@ -12,7 +11,7 @@ running it. It is also possible to print a more or less shell-script like versio
 of the configured command batch.
 
 ```php
-use \EFrane\ConsoleAdditions\Command\Batch;
+use EFrane\ConsoleAdditions\Command\Batch;
 
 class MyBatchingCommand extends Command {
     public function execute(InputInterface $input, OutputInterface $output) {
@@ -38,8 +37,8 @@ There are a few output extensions provided which mainly focus on making
 the output of commands persistable. 
 
 ```php
-use \EFrane\ConsoleAdditions\Output\MultiplexedOutput;
-use \EFrane\ConsoleAdditions\Output\NativeFileOutput;
+use EFrane\ConsoleAdditions\Output\MultiplexedOutput;
+use EFrane\ConsoleAdditions\Output\NativeFileOutput;
 
 class MyLoggingCommand extends Command {
     public function execute(InputInterface $input, OutputInterface $output) {
