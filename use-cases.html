@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Missing tools for the 20% - Helper Classes for Symfony Console">
+    <title>Use Cases & Recipes</title>
+    <link rel="stylesheet" href="/assets/styles.css">
+    
+    <link rel="canonical" href="https://symfony-console-additions.efrane.com/use-cases.html">
+    
+</head>
+<body>
+    <header>
+    <div class="container">
+        <a href="/" class="site-title">Console Additions</a>
+        <nav class="main-nav">
+            <a href="/">Home</a>
+            <a href="/installation.html">Install</a>
+            <a href="/quickstart.html">Quick Start</a>
+            <a href="/api-reference.html">API</a>
+        </nav>
+    </div>
+</header>
+
+    
+    <div class="main-content">
+        <aside class="sidebar">
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/installation.html">Installation</a></li>
+            <li><a href="/quickstart.html">Quick Start</a></li>
+        </ul>
+        <h4>Core Features</h4>
+        <ul>
+            <li><a href="/batch-features.html">Batch Features</a></li>
+            <li><a href="/action-types.html">Action Types</a></li>
+            <li><a href="/output-extensions.html">Output Extensions</a></li>
+        </ul>
+        <h4>Advanced</h4>
+        <ul>
+            <li><a href="/use-cases.html">Use Cases</a></li>
+            <li><a href="/error-handling.html">Error Handling</a></li>
+            <li><a href="/api-reference.html">API Reference</a></li>
+        </ul>
+    </nav>
+</aside>
+
+        <article>
+            <h2 id="common-use-cases">Common Use Cases</h2>
+
+<h3 id="deployment-scripts">Deployment Scripts</h3>
+
+<p>Run a sequence of commands to deploy your application:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'cache:clear'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">addShell</span><span class="p">(</span><span class="s1">'composer install --no-dev --classmap-authoritative'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">addShell</span><span class="p">(</span><span class="s1">'npm install'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">addShell</span><span class="p">(</span><span class="s1">'npm run build'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'database:migrations:migrate --no-interaction'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'assets:install'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">stopOnFailure</span><span class="p">()</span>
+    <span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="database-migration-chaining">Database Migration Chaining</h3>
+
+<p>Run multiple migration-related commands in sequence:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'doctrine:database:create --if-not-exists'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'doctrine:migrations:migrate --no-interaction'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'doctrine:fixtures:load --no-interaction'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'cache:clear'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="log-aggregation">Log Aggregation</h3>
+
+<p>Send command output to multiple log files based on environment:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$outputs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nv">$consoleOutput</span><span class="p">,</span>
+    <span class="k">new</span> <span class="nc">NativeFileOutput</span><span class="p">(</span><span class="s1">'/var/log/commands.log'</span><span class="p">,</span> <span class="nc">NativeFileOutput</span><span class="o">::</span><span class="no">MODE_APPEND</span><span class="p">),</span>
+<span class="p">];</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nv">$debug</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$outputs</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">NativeFileOutput</span><span class="p">(</span><span class="s1">'/var/log/debug.log'</span><span class="p">,</span> <span class="nc">NativeFileOutput</span><span class="o">::</span><span class="no">MODE_APPEND</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nv">$output</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MultiplexedOutput</span><span class="p">(</span><span class="nv">$outputs</span><span class="p">);</span>
+
+<span class="c1">// Now run your batch with this output</span>
+<span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'my:command'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="cicd-command-sequencing">CI/CD Command Sequencing</h3>
+
+<p>In your CI pipeline, run a predictable sequence of commands:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In your CI command</span>
+<span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'tests:phpunit'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'tests:phpstan'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'tests:psalm'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'code:style:fix'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">silenceErrors</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span> <span class="c1">// Fail on first error</span>
+    <span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+
+<span class="k">return</span> <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">allCommandsSucceeded</span><span class="p">()</span> <span class="o">?</span> <span class="nc">Command</span><span class="o">::</span><span class="no">SUCCESS</span> <span class="o">:</span> <span class="nc">Command</span><span class="o">::</span><span class="no">FAILURE</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="multi-destination-logging">Multi-Destination Logging</h3>
+
+<p>Send output to console, local file, and cloud storage simultaneously:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">League\Flysystem\AwsS3V3\AwsS3V3Adapter</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nc">League\Flysystem\Filesystem</span><span class="p">;</span>
+
+<span class="c1">// Set up S3 filesystem</span>
+<span class="nv">$adapter</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">AwsS3V3Adapter</span><span class="p">(</span><span class="nv">$s3Client</span><span class="p">,</span> <span class="nv">$bucketName</span><span class="p">);</span>
+<span class="nv">$s3Filesystem</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Filesystem</span><span class="p">(</span><span class="nv">$adapter</span><span class="p">);</span>
+
+<span class="nv">$output</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MultiplexedOutput</span><span class="p">([</span>
+    <span class="nv">$consoleOutput</span><span class="p">,</span>
+    <span class="k">new</span> <span class="nc">NativeFileOutput</span><span class="p">(</span><span class="s1">'local.log'</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nc">FlysystemFileOutput</span><span class="p">(</span><span class="nv">$s3Filesystem</span><span class="p">,</span> <span class="s1">'s3-logs/command-'</span><span class="mf">.</span><span class="nb">date</span><span class="p">(</span><span class="s1">'Y-m-d-His'</span><span class="p">)</span><span class="mf">.</span><span class="s1">'.log'</span><span class="p">),</span>
+<span class="p">]);</span>
+</code></pre></div></div>
+
+<h2 id="recipes">Recipes</h2>
+
+<h3 id="dry-run-mode">Dry Run Mode</h3>
+
+<p>Show what would be executed without actually running it:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">DryRunCommand</span> <span class="kd">extends</span> <span class="nc">Command</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">execute</span><span class="p">(</span><span class="kt">InputInterface</span> <span class="nv">$input</span><span class="p">,</span> <span class="kt">OutputInterface</span> <span class="nv">$output</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">getApplication</span><span class="p">(),</span> <span class="nv">$output</span><span class="p">);</span>
+
+        <span class="c1">// Build your batch</span>
+        <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'cache:clear'</span><span class="p">);</span>
+        <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'migrations:migrate'</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$input</span><span class="o">-&gt;</span><span class="nf">getOption</span><span class="p">(</span><span class="s1">'dry-run'</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="s1">'&lt;comment&gt;Dry run mode. The following would be executed:&lt;/comment&gt;'</span><span class="p">);</span>
+            <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="s1">''</span><span class="p">);</span>
+            <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">((</span><span class="n">string</span><span class="p">)</span> <span class="nv">$batch</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nc">Command</span><span class="o">::</span><span class="no">SUCCESS</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nc">Command</span><span class="o">::</span><span class="no">SUCCESS</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="retry-with-backoff">Retry with Backoff</h3>
+
+<p>Implement retry logic for flaky commands:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Command\Batch</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nc">RetryBatchCommand</span> <span class="kd">extends</span> <span class="nc">Command</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">execute</span><span class="p">(</span><span class="kt">InputInterface</span> <span class="nv">$input</span><span class="p">,</span> <span class="kt">OutputInterface</span> <span class="nv">$output</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$maxRetries</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="nv">$retryDelay</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="c1">// seconds</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$attempt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$attempt</span> <span class="o">&lt;=</span> <span class="nv">$maxRetries</span><span class="p">;</span> <span class="nv">$attempt</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">try</span> <span class="p">{</span>
+                <span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">getApplication</span><span class="p">(),</span> <span class="nv">$output</span><span class="p">)</span>
+                    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'flaky:command'</span><span class="p">)</span>
+                    <span class="o">-&gt;</span><span class="nf">silenceErrors</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+
+                <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+                <span class="k">return</span> <span class="nc">Command</span><span class="o">::</span><span class="no">SUCCESS</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="err">\</span><span class="nc">Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nv">$attempt</span> <span class="o">&lt;</span> <span class="nv">$maxRetries</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span>
+                        <span class="s1">'&lt;warning&gt;Attempt %d/%d failed, retrying in %d seconds...&lt;/warning&gt;'</span><span class="p">,</span>
+                        <span class="nv">$attempt</span><span class="p">,</span> <span class="nv">$maxRetries</span><span class="p">,</span> <span class="nv">$retryDelay</span>
+                    <span class="p">));</span>
+                    <span class="nb">sleep</span><span class="p">(</span><span class="nv">$retryDelay</span><span class="p">);</span>
+                    <span class="k">continue</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">throw</span> <span class="nv">$e</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="conditional-command-execution">Conditional Command Execution</h3>
+
+<p>Run commands conditionally based on previous results:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">);</span>
+
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'check:precondition'</span><span class="p">);</span>
+
+<span class="c1">// Store result for later</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+
+<span class="nv">$returnCodes</span> <span class="o">=</span> <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">getReturnCodes</span><span class="p">();</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nv">$returnCodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Precondition passed, run main commands</span>
+    <span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'main:command'</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="parallel-like-execution-with-groups">Parallel-like Execution with Groups</h3>
+
+<p>While true parallel execution requires async, you can group related commands:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Database operations</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addMessage</span><span class="p">(</span><span class="s1">'=== Database Operations ==='</span><span class="p">);</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'database:create'</span><span class="p">);</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'database:migrate'</span><span class="p">);</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'database:fixtures'</span><span class="p">);</span>
+
+<span class="c1">// Asset operations</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addMessage</span><span class="p">(</span><span class="s1">'=== Asset Operations ==='</span><span class="p">);</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'assets:install'</span><span class="p">);</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addShell</span><span class="p">(</span><span class="s1">'npm run build'</span><span class="p">);</span>
+
+<span class="c1">// Cache operations</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addMessage</span><span class="p">(</span><span class="s1">'=== Cache Operations ==='</span><span class="p">);</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'cache:clear'</span><span class="p">);</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'cache:warmup'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="interactive-batch-with-confirmation">Interactive Batch with Confirmation</h3>
+
+<p>Confirm before executing a batch:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">Symfony\Component\Console\Style\SymfonyStyle</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nc">ConfirmedBatchCommand</span> <span class="kd">extends</span> <span class="nc">Command</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">execute</span><span class="p">(</span><span class="kt">InputInterface</span> <span class="nv">$input</span><span class="p">,</span> <span class="kt">OutputInterface</span> <span class="nv">$output</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SymfonyStyle</span><span class="p">(</span><span class="nv">$input</span><span class="p">,</span> <span class="nv">$output</span><span class="p">);</span>
+
+        <span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">getApplication</span><span class="p">(),</span> <span class="nv">$output</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'cache:clear'</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'database:migrate'</span><span class="p">);</span>
+
+        <span class="nv">$io</span><span class="o">-&gt;</span><span class="nf">text</span><span class="p">(</span><span class="s1">'The following commands will be executed:'</span><span class="p">);</span>
+        <span class="nv">$io</span><span class="o">-&gt;</span><span class="nf">listing</span><span class="p">(</span><span class="nb">explode</span><span class="p">(</span><span class="s1">' &amp;&amp; '</span><span class="p">,</span> <span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="nv">$batch</span><span class="p">));</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$io</span><span class="o">-&gt;</span><span class="nf">confirm</span><span class="p">(</span><span class="s1">'Continue?'</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nc">Command</span><span class="o">::</span><span class="no">SUCCESS</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nc">Command</span><span class="o">::</span><span class="no">SUCCESS</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="progress-tracking">Progress Tracking</h3>
+
+<p>Track progress through a long-running batch:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$commands</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'step1:prepare'</span><span class="p">,</span>
+    <span class="s1">'step2:process'</span><span class="p">,</span>
+    <span class="s1">'step3:finalize'</span><span class="p">,</span>
+<span class="p">];</span>
+
+<span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">);</span>
+<span class="nv">$total</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$commands</span><span class="p">);</span>
+
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$commands</span> <span class="k">as</span> <span class="nv">$i</span> <span class="o">=&gt;</span> <span class="nv">$command</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addMessage</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span><span class="s1">'Step %d/%d: %s'</span><span class="p">,</span> <span class="nv">$i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">$total</span><span class="p">,</span> <span class="nv">$command</span><span class="p">));</span>
+    <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="nv">$command</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="cleanup-on-failure">Cleanup on Failure</h3>
+
+<p>Register a cleanup action that runs when the batch fails:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">);</span>
+
+<span class="k">try</span> <span class="p">{</span>
+    <span class="nv">$batch</span>
+        <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'deploy:start'</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'deploy:execute'</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="nf">stopOnFailure</span><span class="p">()</span>
+        <span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="err">\</span><span class="nc">Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="s1">'&lt;error&gt;Deployment failed, running cleanup...&lt;/error&gt;'</span><span class="p">);</span>
+    
+    <span class="c1">// Run cleanup batch</span>
+    <span class="nv">$cleanup</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">);</span>
+    <span class="nv">$cleanup</span>
+        <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'deploy:rollback'</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="nf">addShell</span><span class="p">(</span><span class="s1">'git checkout main'</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+    
+    <span class="k">throw</span> <span class="nv">$e</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="tips--best-practices">Tips &amp; Best Practices</h2>
+
+<ol>
+  <li><strong>Use <code class="language-plaintext highlighter-rouge">stopOnFailure()</code></strong> for critical deployments where you don’t want to continue after a failure</li>
+  <li><strong>Use <code class="language-plaintext highlighter-rouge">silenceErrors()</code></strong> for non-critical batches where you want to see all results</li>
+  <li><strong>Add MessageAction</strong> between commands to make output more readable</li>
+  <li><strong>Log the batch configuration</strong> using <code class="language-plaintext highlighter-rouge">(string) $batch</code> for debugging</li>
+  <li><strong>Check return codes</strong> with <code class="language-plaintext highlighter-rouge">allCommandsSucceeded()</code> or <code class="language-plaintext highlighter-rouge">getReturnCodes()</code> for conditional logic</li>
+</ol>
+
+        </article>
+    </div>
+    
+    <footer>
+    <p>MIT Licensed | Copyright &copy; 2017-present Stefan "eFrane" Graupner</p>
+</footer>
+
+</body>
+</html>

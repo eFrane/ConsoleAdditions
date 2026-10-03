@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Missing tools for the 20% - Helper Classes for Symfony Console">
+    <title>Batch Features</title>
+    <link rel="stylesheet" href="/assets/styles.css">
+    
+    <link rel="canonical" href="https://symfony-console-additions.efrane.com/batch-features.html">
+    
+</head>
+<body>
+    <header>
+    <div class="container">
+        <a href="/" class="site-title">Console Additions</a>
+        <nav class="main-nav">
+            <a href="/">Home</a>
+            <a href="/installation.html">Install</a>
+            <a href="/quickstart.html">Quick Start</a>
+            <a href="/api-reference.html">API</a>
+        </nav>
+    </div>
+</header>
+
+    
+    <div class="main-content">
+        <aside class="sidebar">
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/installation.html">Installation</a></li>
+            <li><a href="/quickstart.html">Quick Start</a></li>
+        </ul>
+        <h4>Core Features</h4>
+        <ul>
+            <li><a href="/batch-features.html">Batch Features</a></li>
+            <li><a href="/action-types.html">Action Types</a></li>
+            <li><a href="/output-extensions.html">Output Extensions</a></li>
+        </ul>
+        <h4>Advanced</h4>
+        <ul>
+            <li><a href="/use-cases.html">Use Cases</a></li>
+            <li><a href="/error-handling.html">Error Handling</a></li>
+            <li><a href="/api-reference.html">API Reference</a></li>
+        </ul>
+    </nav>
+</aside>
+
+        <article>
+            <p>The Batch class is the workhorse of Console Additions, enabling you to chain multiple commands together and execute them as a single unit.</p>
+
+<h2 id="basic-usage">Basic Usage</h2>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Command\Batch</span><span class="p">;</span>
+
+<span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'cache:clear'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'migrations:migrate'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'assets:install'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h2 id="command-chaining">Command Chaining</h2>
+
+<p>Commands are executed in the order they are added. Each command’s return code is tracked.</p>
+
+<h3 id="adding-commands">Adding Commands</h3>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">);</span>
+
+<span class="c1">// Add by command name with arguments</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'my:command --option=value'</span><span class="p">);</span>
+
+<span class="c1">// Add multiple at once</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">([</span><span class="s1">'command:one'</span><span class="p">,</span> <span class="s1">'command:two --arg'</span><span class="p">]);</span>
+
+<span class="c1">// Chain fluently</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'first'</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'second'</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'third'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="adding-command-instances">Adding Command Instances</h3>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Command\InstanceCommandAction</span><span class="p">;</span>
+
+<span class="nv">$command</span> <span class="o">=</span> <span class="nv">$application</span><span class="o">-&gt;</span><span class="nf">find</span><span class="p">(</span><span class="s1">'my:command'</span><span class="p">);</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addCommand</span><span class="p">(</span><span class="nv">$command</span><span class="p">,</span> <span class="p">[</span><span class="s1">'--option'</span> <span class="o">=&gt;</span> <span class="s1">'value'</span><span class="p">]);</span>
+</code></pre></div></div>
+
+<h2 id="shell-commands">Shell Commands</h2>
+
+<p><strong>Requires <code class="language-plaintext highlighter-rouge">symfony/process</code> package</strong></p>
+
+<p>Execute system shell commands alongside Symfony console commands.</p>
+
+<h3 id="basic-shell-command">Basic Shell Command</h3>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addShell</span><span class="p">(</span><span class="s1">'ls -la'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="advanced-shell-commands-with-callbacks">Advanced Shell Commands with Callbacks</h3>
+
+<p>For complex shell commands requiring custom configuration (e.g., process piping):</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">Symfony\Component\Process\Process</span><span class="p">;</span>
+
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addShellCb</span><span class="p">(</span><span class="s1">'ls -la'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="kt">Process</span> <span class="nv">$process</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$process</span><span class="o">-&gt;</span><span class="nf">setTimeout</span><span class="p">(</span><span class="mi">60</span><span class="p">);</span>
+    <span class="nv">$process</span><span class="o">-&gt;</span><span class="nf">setTty</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="error-handling">Error Handling</h2>
+
+<h3 id="silencing-errors">Silencing Errors</h3>
+
+<p>Run all commands in the batch without throwing exceptions on failure:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">silenceErrors</span><span class="p">();</span>
+
+<span class="c1">// Or on creation</span>
+<span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span> <span class="c1">// $silenceErrors = true</span>
+</code></pre></div></div>
+
+<h3 id="return-code-tracking">Return Code Tracking</h3>
+
+<p>Check the return codes of all executed commands:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+
+<span class="c1">// Get all return codes</span>
+<span class="nv">$returnCodes</span> <span class="o">=</span> <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">getReturnCodes</span><span class="p">();</span>
+
+<span class="c1">// Check if all succeeded (return code 0)</span>
+<span class="k">if</span> <span class="p">(</span><span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">allCommandsSucceeded</span><span class="p">())</span> <span class="p">{</span>
+    <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="s1">'All commands completed successfully'</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="stop-on-failure">Stop on Failure</h3>
+
+<p>Stop executing subsequent commands if any command fails:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">stopOnFailure</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h2 id="output-control">Output Control</h2>
+
+<h3 id="string-representation">String Representation</h3>
+
+<p>Get a shell-script-like string representation of the batch:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'command:one'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'command:two --arg'</span><span class="p">);</span>
+
+<span class="k">echo</span> <span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="nv">$batch</span><span class="p">;</span>
+<span class="c1">// Output: command:one &amp;&amp; command:two --arg</span>
+</code></pre></div></div>
+
+<p>This is useful for:</p>
+<ul>
+  <li>Logging the batch configuration</li>
+  <li>Generating documentation</li>
+  <li>Allowing users to see what will be executed</li>
+</ul>
+
+<h3 id="custom-output">Custom Output</h3>
+
+<p>You can provide custom output for the batch:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">setOutput</span><span class="p">(</span><span class="nv">$customOutput</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="configuration-options">Configuration Options</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">silenceErrors(bool)</code></td>
+      <td>Don’t throw exceptions on command failure</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">stopOnFailure(bool)</code></td>
+      <td>Stop batch execution on first failure</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">setOutput(OutputInterface)</code></td>
+      <td>Set a custom output</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">setApplication(Application)</code></td>
+      <td>Set the Symfony Application</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="real-world-example">Real-World Example</h2>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Command\Batch</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nc">DeployCommand</span> <span class="kd">extends</span> <span class="nc">Command</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">execute</span><span class="p">(</span><span class="kt">InputInterface</span> <span class="nv">$input</span><span class="p">,</span> <span class="kt">OutputInterface</span> <span class="nv">$output</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">getApplication</span><span class="p">(),</span> <span class="nv">$output</span><span class="p">);</span>
+
+        <span class="nv">$batch</span>
+            <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'cache:clear --no-warmup'</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="nf">addShell</span><span class="p">(</span><span class="s1">'composer install --no-dev'</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="nf">addShellCb</span><span class="p">(</span><span class="s1">'npm install'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="kt">Process</span> <span class="nv">$p</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$p</span><span class="o">-&gt;</span><span class="nf">setTimeout</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+            <span class="p">})</span>
+            <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'database:migrations:migrate --no-interaction'</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'assets:install'</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="nf">stopOnFailure</span><span class="p">()</span>
+            <span class="o">-&gt;</span><span class="nf">silenceErrors</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+            <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="s1">'&lt;info&gt;Deployment completed successfully!&lt;/info&gt;'</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="err">\</span><span class="nc">Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span><span class="s1">'&lt;error&gt;Deployment failed: %s&lt;/error&gt;'</span><span class="p">,</span> <span class="nv">$e</span><span class="o">-&gt;</span><span class="nf">getMessage</span><span class="p">()));</span>
+            <span class="k">return</span> <span class="nc">Command</span><span class="o">::</span><span class="no">FAILURE</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nc">Command</span><span class="o">::</span><span class="no">SUCCESS</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+        </article>
+    </div>
+    
+    <footer>
+    <p>MIT Licensed | Copyright &copy; 2017-present Stefan "eFrane" Graupner</p>
+</footer>
+
+</body>
+</html>

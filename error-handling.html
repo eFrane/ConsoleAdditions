@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Missing tools for the 20% - Helper Classes for Symfony Console">
+    <title>Error Handling</title>
+    <link rel="stylesheet" href="/assets/styles.css">
+    
+    <link rel="canonical" href="https://symfony-console-additions.efrane.com/error-handling.html">
+    
+</head>
+<body>
+    <header>
+    <div class="container">
+        <a href="/" class="site-title">Console Additions</a>
+        <nav class="main-nav">
+            <a href="/">Home</a>
+            <a href="/installation.html">Install</a>
+            <a href="/quickstart.html">Quick Start</a>
+            <a href="/api-reference.html">API</a>
+        </nav>
+    </div>
+</header>
+
+    
+    <div class="main-content">
+        <aside class="sidebar">
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/installation.html">Installation</a></li>
+            <li><a href="/quickstart.html">Quick Start</a></li>
+        </ul>
+        <h4>Core Features</h4>
+        <ul>
+            <li><a href="/batch-features.html">Batch Features</a></li>
+            <li><a href="/action-types.html">Action Types</a></li>
+            <li><a href="/output-extensions.html">Output Extensions</a></li>
+        </ul>
+        <h4>Advanced</h4>
+        <ul>
+            <li><a href="/use-cases.html">Use Cases</a></li>
+            <li><a href="/error-handling.html">Error Handling</a></li>
+            <li><a href="/api-reference.html">API Reference</a></li>
+        </ul>
+    </nav>
+</aside>
+
+        <article>
+            <p>Console Additions provides exception classes for handling errors in Batches and Outputs. Understanding these exceptions helps you build robust applications.</p>
+
+<h2 id="exception-hierarchy">Exception Hierarchy</h2>
+
+<p>All Console Additions exceptions extend from <code class="language-plaintext highlighter-rouge">\RuntimeException</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RuntimeException
+├── BatchException
+│   └── (thrown by Batch when commands fail)
+└── MultiplexedOutputException
+    └── (thrown by MultiplexedOutput)
+</code></pre></div></div>
+
+<p>Additionally, file-related exceptions:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FileOutputException
+└── (thrown by file output implementations)
+</code></pre></div></div>
+
+<h2 id="batchexception">BatchException</h2>
+
+<p>Thrown when a batch command fails and <code class="language-plaintext highlighter-rouge">silenceErrors(false)</code> is set (default behavior).</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Exception\BatchException</span><span class="p">;</span>
+
+<span class="k">try</span> <span class="p">{</span>
+    <span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'might:fail'</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="nf">silenceErrors</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span> <span class="c1">// This is the default</span>
+        <span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nc">BatchException</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Handle batch failure</span>
+    <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span>
+        <span class="s1">'&lt;error&gt;Batch failed: %s&lt;/error&gt;'</span><span class="p">,</span>
+        <span class="nv">$e</span><span class="o">-&gt;</span><span class="nf">getMessage</span><span class="p">()</span>
+    <span class="p">));</span>
+    
+    <span class="c1">// Get the failed command</span>
+    <span class="nv">$failedCommand</span> <span class="o">=</span> <span class="nv">$e</span><span class="o">-&gt;</span><span class="nf">getCommand</span><span class="p">();</span>
+    <span class="nv">$returnCode</span> <span class="o">=</span> <span class="nv">$e</span><span class="o">-&gt;</span><span class="nf">getReturnCode</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="methods">Methods</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">getCommand()</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string\|null</code></td>
+      <td>Returns the command name that failed</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">getReturnCode()</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int\|null</code></td>
+      <td>Returns the exit code of the failed command</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">getPrevious()</code></td>
+      <td><code class="language-plaintext highlighter-rouge">\Throwable\|null</code></td>
+      <td>Returns the previous exception (if nested)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="common-causes">Common Causes</h3>
+
+<ul>
+  <li>A command returns a non-zero exit code</li>
+  <li>A command throws an exception</li>
+  <li>A shell command fails (requires symfony/process)</li>
+</ul>
+
+<h2 id="multiplexedoutputexception">MultiplexedOutputException</h2>
+
+<p>Thrown when an error occurs while writing to one of the multiplexed outputs.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Output\MultiplexedOutput</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Exception\MultiplexedOutputException</span><span class="p">;</span>
+
+<span class="k">try</span> <span class="p">{</span>
+    <span class="nv">$output</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MultiplexedOutput</span><span class="p">([</span>
+        <span class="nv">$consoleOutput</span><span class="p">,</span>
+        <span class="k">new</span> <span class="nc">NativeFileOutput</span><span class="p">(</span><span class="s1">'/nonexistent/directory/file.log'</span><span class="p">),</span>
+    <span class="p">]);</span>
+    
+    <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="s1">'This will fail'</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nc">MultiplexedOutputException</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Handle output failure</span>
+    <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span>
+        <span class="s1">'&lt;error&gt;Failed to write to one or more outputs: %s&lt;/error&gt;'</span><span class="p">,</span>
+        <span class="nv">$e</span><span class="o">-&gt;</span><span class="nf">getMessage</span><span class="p">()</span>
+    <span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="common-causes-1">Common Causes</h3>
+
+<ul>
+  <li>Permission denied when writing to a file</li>
+  <li>Directory doesn’t exist</li>
+  <li>Network issues with cloud storage (FlysystemFileOutput)</li>
+  <li>One of the outputs throws an exception</li>
+</ul>
+
+<h2 id="fileoutputexception">FileOutputException</h2>
+
+<p>Thrown by file output implementations when file operations fail.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Output\NativeFileOutput</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Exception\FileOutputException</span><span class="p">;</span>
+
+<span class="k">try</span> <span class="p">{</span>
+    <span class="nv">$output</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">NativeFileOutput</span><span class="p">(</span><span class="s1">'/protected/directory/file.log'</span><span class="p">);</span>
+    <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="s1">'This will fail'</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nc">FileOutputException</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Handle file output failure</span>
+    <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span>
+        <span class="s1">'&lt;error&gt;File output failed: %s&lt;/error&gt;'</span><span class="p">,</span>
+        <span class="nv">$e</span><span class="o">-&gt;</span><span class="nf">getMessage</span><span class="p">()</span>
+    <span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="common-causes-2">Common Causes</h3>
+
+<ul>
+  <li>Permission denied</li>
+  <li>Directory doesn’t exist</li>
+  <li>Disk is full</li>
+  <li>File path is invalid</li>
+</ul>
+
+<h2 id="handling-errors-in-batches">Handling Errors in Batches</h2>
+
+<h3 id="silencing-errors">Silencing Errors</h3>
+
+<p>To prevent BatchException from being thrown:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'might:fail'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">silenceErrors</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="c1">// Continue even if commands fail</span>
+    <span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+
+<span class="c1">// Check results after</span>
+<span class="k">if</span> <span class="p">(</span><span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">allCommandsSucceeded</span><span class="p">())</span> <span class="p">{</span>
+    <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="s1">'All commands succeeded!'</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nv">$returnCodes</span> <span class="o">=</span> <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">getReturnCodes</span><span class="p">();</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$returnCodes</span> <span class="k">as</span> <span class="nv">$i</span> <span class="o">=&gt;</span> <span class="nv">$code</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$code</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span><span class="s1">'Command %d failed with code %d'</span><span class="p">,</span> <span class="nv">$i</span><span class="p">,</span> <span class="nv">$code</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="stopping-on-failure">Stopping on Failure</h3>
+
+<p>Stop executing subsequent commands when one fails:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'command:one'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'command:two'</span><span class="p">)</span> <span class="c1">// Won't run if command:one fails</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'command:three'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">stopOnFailure</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="getting-return-codes">Getting Return Codes</h3>
+
+<p>Always available after running a batch:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+
+<span class="c1">// Get all return codes as array</span>
+<span class="nv">$returnCodes</span> <span class="o">=</span> <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">getReturnCodes</span><span class="p">();</span>
+
+<span class="c1">// Check if all succeeded</span>
+<span class="k">if</span> <span class="p">(</span><span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">allCommandsSucceeded</span><span class="p">())</span> <span class="p">{</span>
+    <span class="c1">// All commands returned 0</span>
+<span class="p">}</span>
+
+<span class="c1">// Check specific command</span>
+<span class="k">if</span> <span class="p">(</span><span class="nv">$returnCodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// First command succeeded</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<ol>
+  <li><strong>Use <code class="language-plaintext highlighter-rouge">silenceErrors(true)</code> for non-critical batches</strong> where you want to see all results</li>
+  <li><strong>Use <code class="language-plaintext highlighter-rouge">stopOnFailure(true)</code> for deployments</strong> where you don’t want to continue after a failure</li>
+  <li><strong>Always check return codes</strong> for conditional logic</li>
+  <li><strong>Wrap batches in try-catch</strong> for critical operations</li>
+  <li><strong>Log failures</strong> with details from the exception</li>
+</ol>
+
+<h2 id="complete-error-handling-example">Complete Error Handling Example</h2>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Command\Batch</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Exception\BatchException</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nc">SafeDeployCommand</span> <span class="kd">extends</span> <span class="nc">Command</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">execute</span><span class="p">(</span><span class="kt">InputInterface</span> <span class="nv">$input</span><span class="p">,</span> <span class="kt">OutputInterface</span> <span class="nv">$output</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">getApplication</span><span class="p">(),</span> <span class="nv">$output</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'deploy:prepare'</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'deploy:execute'</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="nf">stopOnFailure</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="nf">silenceErrors</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+            <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="s1">'&lt;info&gt;Deployment successful!&lt;/info&gt;'</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nc">Command</span><span class="o">::</span><span class="no">SUCCESS</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nc">BatchException</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span>
+                <span class="s1">'&lt;error&gt;Deployment failed at: %s (exit code: %d)&lt;/error&gt;'</span><span class="p">,</span>
+                <span class="nv">$e</span><span class="o">-&gt;</span><span class="nf">getCommand</span><span class="p">()</span> <span class="o">??</span> <span class="s1">'unknown'</span><span class="p">,</span>
+                <span class="nv">$e</span><span class="o">-&gt;</span><span class="nf">getReturnCode</span><span class="p">()</span> <span class="o">??</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="p">));</span>
+            
+            <span class="c1">// Attempt cleanup</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">runCleanup</span><span class="p">(</span><span class="nv">$output</span><span class="p">);</span>
+            
+            <span class="k">return</span> <span class="nc">Command</span><span class="o">::</span><span class="no">FAILURE</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="n">runCleanup</span><span class="p">(</span><span class="kt">OutputInterface</span> <span class="nv">$output</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="nv">$cleanup</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">getApplication</span><span class="p">(),</span> <span class="nv">$output</span><span class="p">);</span>
+            <span class="nv">$cleanup</span>
+                <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'deploy:rollback'</span><span class="p">)</span>
+                <span class="o">-&gt;</span><span class="nf">silenceErrors</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+                <span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+            
+            <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="s1">'&lt;comment&gt;Cleanup completed&lt;/comment&gt;'</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="err">\</span><span class="nc">Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span>
+                <span class="s1">'&lt;error&gt;Cleanup also failed: %s&lt;/error&gt;'</span><span class="p">,</span>
+                <span class="nv">$e</span><span class="o">-&gt;</span><span class="nf">getMessage</span><span class="p">()</span>
+            <span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+        </article>
+    </div>
+    
+    <footer>
+    <p>MIT Licensed | Copyright &copy; 2017-present Stefan "eFrane" Graupner</p>
+</footer>
+
+</body>
+</html>

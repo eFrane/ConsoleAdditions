@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Missing tools for the 20% - Helper Classes for Symfony Console">
+    <title>Output Extensions</title>
+    <link rel="stylesheet" href="/assets/styles.css">
+    
+    <link rel="canonical" href="https://symfony-console-additions.efrane.com/output-extensions.html">
+    
+</head>
+<body>
+    <header>
+    <div class="container">
+        <a href="/" class="site-title">Console Additions</a>
+        <nav class="main-nav">
+            <a href="/">Home</a>
+            <a href="/installation.html">Install</a>
+            <a href="/quickstart.html">Quick Start</a>
+            <a href="/api-reference.html">API</a>
+        </nav>
+    </div>
+</header>
+
+    
+    <div class="main-content">
+        <aside class="sidebar">
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/installation.html">Installation</a></li>
+            <li><a href="/quickstart.html">Quick Start</a></li>
+        </ul>
+        <h4>Core Features</h4>
+        <ul>
+            <li><a href="/batch-features.html">Batch Features</a></li>
+            <li><a href="/action-types.html">Action Types</a></li>
+            <li><a href="/output-extensions.html">Output Extensions</a></li>
+        </ul>
+        <h4>Advanced</h4>
+        <ul>
+            <li><a href="/use-cases.html">Use Cases</a></li>
+            <li><a href="/error-handling.html">Error Handling</a></li>
+            <li><a href="/api-reference.html">API Reference</a></li>
+        </ul>
+    </nav>
+</aside>
+
+        <article>
+            <p>This library provides several output extensions that build on Symfony’s Console OutputInterface.</p>
+
+<h2 id="overview">Overview</h2>
+
+<p>The output extensions primarily focus on making command output <strong>persistable</strong> — allowing you to send console output to files, cloud storage, or multiple destinations simultaneously.</p>
+
+<h2 id="available-extensions">Available Extensions</h2>
+
+<h3 id="fileoutput-interface">FileOutput (Interface)</h3>
+
+<p>Base interface that all file-based outputs implement. Defines the contract for file output behavior.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Output\FileOutputInterface</span><span class="p">;</span>
+
+<span class="c1">// Type hint against the interface</span>
+<span class="k">public</span> <span class="k">function</span> <span class="n">someMethod</span><span class="p">(</span><span class="kt">FileOutputInterface</span> <span class="nv">$output</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Works with any file output implementation</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="nativefileoutput">NativeFileOutput</h3>
+
+<p>Uses PHP’s native file streaming functions. Good for:</p>
+<ul>
+  <li>Local file system destinations</li>
+  <li>Remote destinations (depending on your PHP <code class="language-plaintext highlighter-rouge">allow_url_fopen</code> configuration)</li>
+</ul>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Output\NativeFileOutput</span><span class="p">;</span>
+
+<span class="c1">// Write to a local file</span>
+<span class="nv">$fileOutput</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">NativeFileOutput</span><span class="p">(</span><span class="s1">'command.log'</span><span class="p">);</span>
+
+<span class="c1">// Append mode (default is overwrite)</span>
+<span class="nv">$fileOutput</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">NativeFileOutput</span><span class="p">(</span><span class="s1">'command.log'</span><span class="p">,</span> <span class="nc">NativeFileOutput</span><span class="o">::</span><span class="no">MODE_APPEND</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>Constructor:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">NativeFileOutput</span><span class="o">::</span><span class="nf">__construct</span><span class="p">(</span>
+    <span class="n">string</span> <span class="nv">$path</span><span class="p">,</span>
+    <span class="n">int</span> <span class="nv">$mode</span> <span class="o">=</span> <span class="nc">NativeFileOutput</span><span class="o">::</span><span class="no">MODE_OVERWRITE</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="flysystemfileoutput">FlysystemFileOutput</h3>
+
+<p>Integrates with <a href="https://flysystem.thephpleague.com/">league/flysystem</a> for cloud storage support.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Output\FlysystemFileOutput</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nc">League\Flysystem\Local\LocalFilesystemAdapter</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nc">League\Flysystem\Filesystem</span><span class="p">;</span>
+
+<span class="nv">$adapter</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LocalFilesystemAdapter</span><span class="p">(</span><span class="s1">'/path/to/storage'</span><span class="p">);</span>
+<span class="nv">$filesystem</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Filesystem</span><span class="p">(</span><span class="nv">$adapter</span><span class="p">);</span>
+
+<span class="nv">$output</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">FlysystemFileOutput</span><span class="p">(</span><span class="nv">$filesystem</span><span class="p">,</span> <span class="s1">'command.log'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>Cloud Storage Example:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">League\Flysystem\AwsS3V3\AwsS3V3Adapter</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nc">League\Flysystem\Filesystem</span><span class="p">;</span>
+
+<span class="nv">$adapter</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">AwsS3V3Adapter</span><span class="p">(</span>
+    <span class="nv">$client</span><span class="p">,</span>
+    <span class="nv">$bucket</span><span class="p">,</span>
+    <span class="nv">$prefix</span> <span class="o">=</span> <span class="s1">''</span>
+<span class="p">);</span>
+<span class="nv">$filesystem</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Filesystem</span><span class="p">(</span><span class="nv">$adapter</span><span class="p">);</span>
+
+<span class="nv">$output</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">FlysystemFileOutput</span><span class="p">(</span><span class="nv">$filesystem</span><span class="p">,</span> <span class="s1">'s3-command.log'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="multiplexedoutput">MultiplexedOutput</h3>
+
+<p>Combines multiple output interfaces into a single output that writes to all destinations.</p>
+
+<p>This is the most common use case — send output to both the console <strong>and</strong> a file.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Output\MultiplexedOutput</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Output\NativeFileOutput</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nc">MyCommand</span> <span class="kd">extends</span> <span class="nc">Command</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">execute</span><span class="p">(</span><span class="kt">InputInterface</span> <span class="nv">$input</span><span class="p">,</span> <span class="kt">OutputInterface</span> <span class="nv">$output</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$output</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MultiplexedOutput</span><span class="p">([</span>
+            <span class="c1">// Keep the original console output</span>
+            <span class="nv">$output</span><span class="p">,</span>
+            <span class="c1">// Add file output</span>
+            <span class="k">new</span> <span class="nc">NativeFileOutput</span><span class="p">(</span><span class="s1">'command.log'</span><span class="p">),</span>
+            <span class="c1">// Add another file</span>
+            <span class="k">new</span> <span class="nc">NativeFileOutput</span><span class="p">(</span><span class="s1">'debug.log'</span><span class="p">,</span> <span class="nc">NativeFileOutput</span><span class="o">::</span><span class="no">MODE_APPEND</span><span class="p">),</span>
+        <span class="p">]);</span>
+
+        <span class="c1">// All output now goes to all three destinations</span>
+        <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="s1">'This goes to console and both files'</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Constructor:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">MultiplexedOutput</span><span class="o">::</span><span class="nf">__construct</span><span class="p">(</span><span class="k">array</span> <span class="nv">$outputs</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Adding outputs dynamically:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$multiplexed</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MultiplexedOutput</span><span class="p">([</span><span class="nv">$consoleOutput</span><span class="p">]);</span>
+<span class="nv">$multiplexed</span><span class="o">-&gt;</span><span class="nf">addOutput</span><span class="p">(</span><span class="k">new</span> <span class="nc">NativeFileOutput</span><span class="p">(</span><span class="s1">'added-file.log'</span><span class="p">));</span>
+</code></pre></div></div>
+
+<h2 id="use-cases">Use Cases</h2>
+
+<h3 id="logging-command-output">Logging Command Output</h3>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$output</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MultiplexedOutput</span><span class="p">([</span>
+    <span class="nv">$consoleOutput</span><span class="p">,</span>
+    <span class="k">new</span> <span class="nc">NativeFileOutput</span><span class="p">(</span><span class="s1">'/var/log/commands.log'</span><span class="p">,</span> <span class="nc">NativeFileOutput</span><span class="o">::</span><span class="no">MODE_APPEND</span><span class="p">)</span>
+<span class="p">]);</span>
+</code></pre></div></div>
+
+<h3 id="cloud-backup-of-cli-output">Cloud Backup of CLI Output</h3>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Backup all command output to S3</span>
+<span class="nv">$output</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MultiplexedOutput</span><span class="p">([</span>
+    <span class="nv">$consoleOutput</span><span class="p">,</span>
+    <span class="k">new</span> <span class="nc">FlysystemFileOutput</span><span class="p">(</span><span class="nv">$s3Filesystem</span><span class="p">,</span> <span class="s1">'backup/command-'</span><span class="mf">.</span><span class="nb">date</span><span class="p">(</span><span class="s1">'Y-m-d'</span><span class="p">)</span><span class="mf">.</span><span class="s1">'.log'</span><span class="p">)</span>
+<span class="p">]);</span>
+</code></pre></div></div>
+
+<h3 id="debug-vs-production-output">Debug vs Production Output</h3>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$outputs</span> <span class="o">=</span> <span class="p">[</span><span class="nv">$consoleOutput</span><span class="p">];</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nv">$debugMode</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$outputs</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">NativeFileOutput</span><span class="p">(</span><span class="s1">'debug.log'</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nv">$output</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MultiplexedOutput</span><span class="p">(</span><span class="nv">$outputs</span><span class="p">);</span>
+</code></pre></div></div>
+
+        </article>
+    </div>
+    
+    <footer>
+    <p>MIT Licensed | Copyright &copy; 2017-present Stefan "eFrane" Graupner</p>
+</footer>
+
+</body>
+</html>

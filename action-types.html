@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Missing tools for the 20% - Helper Classes for Symfony Console">
+    <title>Action Types</title>
+    <link rel="stylesheet" href="/assets/styles.css">
+    
+    <link rel="canonical" href="https://symfony-console-additions.efrane.com/action-types.html">
+    
+</head>
+<body>
+    <header>
+    <div class="container">
+        <a href="/" class="site-title">Console Additions</a>
+        <nav class="main-nav">
+            <a href="/">Home</a>
+            <a href="/installation.html">Install</a>
+            <a href="/quickstart.html">Quick Start</a>
+            <a href="/api-reference.html">API</a>
+        </nav>
+    </div>
+</header>
+
+    
+    <div class="main-content">
+        <aside class="sidebar">
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/installation.html">Installation</a></li>
+            <li><a href="/quickstart.html">Quick Start</a></li>
+        </ul>
+        <h4>Core Features</h4>
+        <ul>
+            <li><a href="/batch-features.html">Batch Features</a></li>
+            <li><a href="/action-types.html">Action Types</a></li>
+            <li><a href="/output-extensions.html">Output Extensions</a></li>
+        </ul>
+        <h4>Advanced</h4>
+        <ul>
+            <li><a href="/use-cases.html">Use Cases</a></li>
+            <li><a href="/error-handling.html">Error Handling</a></li>
+            <li><a href="/api-reference.html">API Reference</a></li>
+        </ul>
+    </nav>
+</aside>
+
+        <article>
+            <p>The Batch system uses a flexible Action pattern that allows different types of commands and operations to be executed in sequence. Each action type implements a common interface and can be mixed within a single batch.</p>
+
+<h2 id="action-interface">Action Interface</h2>
+
+<p>All action types implement <code class="language-plaintext highlighter-rouge">EFrane\ConsoleAdditions\Batch\Action</code>:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">interface</span> <span class="nc">Action</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">getName</span><span class="p">():</span> <span class="kt">string</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">setOutput</span><span class="p">(</span><span class="kt">OutputInterface</span> <span class="nv">$output</span><span class="p">):</span> <span class="kt">void</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">execute</span><span class="p">(</span><span class="kt">Style</span><span class="err">\</span><span class="nc">SymfonyStyle</span> <span class="nv">$io</span><span class="p">)</span><span class="o">:</span> <span class="n">int</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="available-action-types">Available Action Types</h2>
+
+<h3 id="stringcommandaction">StringCommandAction</h3>
+
+<p>The simplest action type — represents a command by its name as a string.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Batch\StringCommandAction</span><span class="p">;</span>
+
+<span class="nv">$action</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringCommandAction</span><span class="p">(</span><span class="s1">'cache:clear'</span><span class="p">);</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addAction</span><span class="p">(</span><span class="nv">$action</span><span class="p">);</span>
+
+<span class="c1">// Or simply use the shorthand:</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'cache:clear'</span><span class="p">);</span> <span class="c1">// Creates StringCommandAction internally</span>
+</code></pre></div></div>
+
+<p><strong>Use when:</strong> You have a command name and want to execute it with its default behavior.</p>
+
+<h3 id="instancecommandaction">InstanceCommandAction</h3>
+
+<p>Wraps an actual Symfony Command instance for direct execution.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Batch\InstanceCommandAction</span><span class="p">;</span>
+
+<span class="nv">$command</span> <span class="o">=</span> <span class="nv">$application</span><span class="o">-&gt;</span><span class="nf">find</span><span class="p">(</span><span class="s1">'my:command'</span><span class="p">);</span>
+<span class="nv">$action</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">InstanceCommandAction</span><span class="p">(</span><span class="nv">$command</span><span class="p">,</span> <span class="p">[</span><span class="s1">'--option'</span> <span class="o">=&gt;</span> <span class="s1">'value'</span><span class="p">]);</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addAction</span><span class="p">(</span><span class="nv">$action</span><span class="p">);</span>
+
+<span class="c1">// Or use the shorthand:</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addCommand</span><span class="p">(</span><span class="nv">$command</span><span class="p">,</span> <span class="p">[</span><span class="s1">'--option'</span> <span class="o">=&gt;</span> <span class="s1">'value'</span><span class="p">]);</span>
+</code></pre></div></div>
+
+<p><strong>Use when:</strong> You need to pass a Command instance directly, or configure the command before adding it to the batch.</p>
+
+<h3 id="shellaction">ShellAction</h3>
+
+<p>Executes a shell command. <strong>Requires <code class="language-plaintext highlighter-rouge">symfony/process</code> package.</strong></p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Batch\ShellAction</span><span class="p">;</span>
+
+<span class="nv">$action</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ShellAction</span><span class="p">(</span><span class="s1">'ls -la'</span><span class="p">);</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addAction</span><span class="p">(</span><span class="nv">$action</span><span class="p">);</span>
+
+<span class="c1">// Or use the shorthand:</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addShell</span><span class="p">(</span><span class="s1">'ls -la'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>Constructor:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ShellAction</span><span class="o">::</span><span class="nf">__construct</span><span class="p">(</span>
+    <span class="n">string</span> <span class="nv">$command</span><span class="p">,</span>
+    <span class="o">?</span><span class="nc">Closure</span> <span class="nv">$callback</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="o">?</span><span class="nc">Style\SymfonyStyle</span> <span class="nv">$io</span> <span class="o">=</span> <span class="kc">null</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Use when:</strong> You need to run system-level commands as part of your batch.</p>
+
+<h3 id="processaction">ProcessAction</h3>
+
+<p>A lower-level action that wraps a Symfony Process. <strong>Requires <code class="language-plaintext highlighter-rouge">symfony/process</code> package.</strong></p>
+
+<p>This gives you full control over the process configuration.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Batch\ProcessAction</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nc">Symfony\Component\Process\Process</span><span class="p">;</span>
+
+<span class="nv">$process</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Process</span><span class="p">([</span><span class="s1">'git'</span><span class="p">,</span> <span class="s1">'pull'</span><span class="p">]);</span>
+<span class="nv">$process</span><span class="o">-&gt;</span><span class="nf">setTimeout</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+<span class="nv">$process</span><span class="o">-&gt;</span><span class="nf">setWorkingDirectory</span><span class="p">(</span><span class="s1">'/path/to/repo'</span><span class="p">);</span>
+
+<span class="nv">$action</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ProcessAction</span><span class="p">(</span><span class="nv">$process</span><span class="p">);</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addAction</span><span class="p">(</span><span class="nv">$action</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>Use when:</strong> You need fine-grained control over process execution (timeout, working directory, environment variables, TTY, etc.).</p>
+
+<h3 id="messageaction">MessageAction</h3>
+
+<p>Outputs a message without executing any command. Useful for adding informative text between commands.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Batch\MessageAction</span><span class="p">;</span>
+
+<span class="nv">$action</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MessageAction</span><span class="p">(</span><span class="s1">'Running migrations...'</span><span class="p">);</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addAction</span><span class="p">(</span><span class="nv">$action</span><span class="p">);</span>
+
+<span class="c1">// Or use the shorthand:</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addMessage</span><span class="p">(</span><span class="s1">'Running migrations...'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>Constructor:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">MessageAction</span><span class="o">::</span><span class="nf">__construct</span><span class="p">(</span>
+    <span class="n">string</span> <span class="nv">$message</span><span class="p">,</span>
+    <span class="n">string</span> <span class="nv">$type</span> <span class="o">=</span> <span class="s1">'info'</span> <span class="c1">// 'info', 'comment', 'question', 'success', 'warning', 'error'</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Example with different message types:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$batch</span>
+    <span class="o">-&gt;</span><span class="nf">addMessage</span><span class="p">(</span><span class="s1">'Starting deployment'</span><span class="p">,</span> <span class="s1">'info'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'deploy:prepare'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">addMessage</span><span class="p">(</span><span class="s1">'Clearing cache...'</span><span class="p">,</span> <span class="s1">'comment'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'cache:clear'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">addMessage</span><span class="p">(</span><span class="s1">'Deployment complete!'</span><span class="p">,</span> <span class="s1">'success'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="combining-action-types">Combining Action Types</h2>
+
+<p>All action types can be freely mixed within a single batch:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Command\Batch</span><span class="p">;</span>
+
+<span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$application</span><span class="p">,</span> <span class="nv">$output</span><span class="p">);</span>
+
+<span class="nv">$batch</span>
+    <span class="o">-&gt;</span><span class="nf">addMessage</span><span class="p">(</span><span class="s1">'Starting deployment sequence'</span><span class="p">,</span> <span class="s1">'info'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'deploy:prepare'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">addShell</span><span class="p">(</span><span class="s1">'composer install --no-dev'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">addMessage</span><span class="p">(</span><span class="s1">'Running database migrations'</span><span class="p">,</span> <span class="s1">'comment'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'database:migrations:migrate'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">addShell</span><span class="p">(</span><span class="s1">'npm run build'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">addMessage</span><span class="p">(</span><span class="s1">'Deployment finished!'</span><span class="p">,</span> <span class="s1">'success'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="custom-actions">Custom Actions</h2>
+
+<p>You can create your own action types by implementing the <code class="language-plaintext highlighter-rouge">Action</code> interface:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Batch\Action</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nc">Symfony\Component\Console\Output\OutputInterface</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nc">Symfony\Component\Console\Style\SymfonyStyle</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nc">CustomAction</span> <span class="kd">implements</span> <span class="nc">Action</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$name</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="n">__construct</span><span class="p">(</span><span class="kt">string</span> <span class="nv">$name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">name</span> <span class="o">=</span> <span class="nv">$name</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="n">getName</span><span class="p">():</span> <span class="kt">string</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="n">setOutput</span><span class="p">(</span><span class="kt">OutputInterface</span> <span class="nv">$output</span><span class="p">):</span> <span class="kt">void</span> <span class="p">{</span>
+        <span class="c1">// Store output for later use</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="n">execute</span><span class="p">(</span><span class="kt">SymfonyStyle</span> <span class="nv">$io</span><span class="p">):</span> <span class="kt">int</span> <span class="p">{</span>
+        <span class="nv">$io</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="s1">'Executing custom action: '</span> <span class="mf">.</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+        <span class="c1">// Do your custom logic here</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// Return code</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Use it in a batch</span>
+<span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">addAction</span><span class="p">(</span><span class="k">new</span> <span class="nc">CustomAction</span><span class="p">(</span><span class="s1">'my-custom-action'</span><span class="p">));</span>
+</code></pre></div></div>
+
+<h2 id="action-lifecycle">Action Lifecycle</h2>
+
+<ol>
+  <li><strong>Creation</strong>: Action is created and added to the batch</li>
+  <li><strong>Output Injection</strong>: <code class="language-plaintext highlighter-rouge">setOutput()</code> is called with the batch’s output</li>
+  <li><strong>Execution</strong>: <code class="language-plaintext highlighter-rouge">execute()</code> is called when the batch runs</li>
+  <li><strong>Return Code</strong>: The action returns an integer exit code (0 = success)</li>
+</ol>
+
+<p>The batch collects all return codes and can be configured to stop on failure or continue regardless.</p>
+
+        </article>
+    </div>
+    
+    <footer>
+    <p>MIT Licensed | Copyright &copy; 2017-present Stefan "eFrane" Graupner</p>
+</footer>
+
+</body>
+</html>

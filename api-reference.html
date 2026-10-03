@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Missing tools for the 20% - Helper Classes for Symfony Console">
+    <title>API Reference</title>
+    <link rel="stylesheet" href="/assets/styles.css">
+    
+    <link rel="canonical" href="https://symfony-console-additions.efrane.com/api-reference.html">
+    
+</head>
+<body>
+    <header>
+    <div class="container">
+        <a href="/" class="site-title">Console Additions</a>
+        <nav class="main-nav">
+            <a href="/">Home</a>
+            <a href="/installation.html">Install</a>
+            <a href="/quickstart.html">Quick Start</a>
+            <a href="/api-reference.html">API</a>
+        </nav>
+    </div>
+</header>
+
+    
+    <div class="main-content">
+        <aside class="sidebar">
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/installation.html">Installation</a></li>
+            <li><a href="/quickstart.html">Quick Start</a></li>
+        </ul>
+        <h4>Core Features</h4>
+        <ul>
+            <li><a href="/batch-features.html">Batch Features</a></li>
+            <li><a href="/action-types.html">Action Types</a></li>
+            <li><a href="/output-extensions.html">Output Extensions</a></li>
+        </ul>
+        <h4>Advanced</h4>
+        <ul>
+            <li><a href="/use-cases.html">Use Cases</a></li>
+            <li><a href="/error-handling.html">Error Handling</a></li>
+            <li><a href="/api-reference.html">API Reference</a></li>
+        </ul>
+    </nav>
+</aside>
+
+        <article>
+            <h2 id="namespace-efraneconsoleadditions">Namespace: <code class="language-plaintext highlighter-rouge">EFrane\ConsoleAdditions\</code></h2>
+
+<h3 id="root-classes">Root Classes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Class</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EFrane\ConsoleAdditions\Command\Batch</code></td>
+      <td>Main batch execution class</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="namespace-efraneconsoleadditionscommand">Namespace: <code class="language-plaintext highlighter-rouge">EFrane\ConsoleAdditions\Command</code></h2>
+
+<h3 id="batch">Batch</h3>
+
+<p>The main class for creating and executing command batches.</p>
+
+<p><strong>Class:</strong> <code class="language-plaintext highlighter-rouge">EFrane\ConsoleAdditions\Command\Batch</code></p>
+
+<h4 id="static-methods">Static Methods</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">static create(Application $app, OutputInterface $output, bool $silenceErrors = false)</code></td>
+      <td>Create a new batch instance</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="instance-methods">Instance Methods</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">add(string\|array $command)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">self</code></td>
+      <td>Add one or more commands by name</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">addCommand(Command $command, array $arguments = [])</code></td>
+      <td><code class="language-plaintext highlighter-rouge">self</code></td>
+      <td>Add a Command instance</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">addAction(Action $action)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">self</code></td>
+      <td>Add an Action instance</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">addShell(string $command, ?Closure $callback = null)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">self</code></td>
+      <td>Add a shell command (requires symfony/process)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">addShellCb(string $command, Closure $callback)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">self</code></td>
+      <td>Add shell command with configuration callback</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">addMessage(string $message, string $type = 'info')</code></td>
+      <td><code class="language-plaintext highlighter-rouge">self</code></td>
+      <td>Add a message action</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">run()</code></td>
+      <td><code class="language-plaintext highlighter-rouge">void</code></td>
+      <td>Execute the batch</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">silenceErrors(bool $silence = true)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">self</code></td>
+      <td>Enable/disable error silencing</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">stopOnFailure(bool $stop = true)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">self</code></td>
+      <td>Enable/disable stop on failure</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">setOutput(OutputInterface $output)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">self</code></td>
+      <td>Set the output</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">setApplication(Application $app)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">self</code></td>
+      <td>Set the application</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">getReturnCodes()</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>Get all return codes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allCommandsSucceeded()</code></td>
+      <td><code class="language-plaintext highlighter-rouge">bool</code></td>
+      <td>Check if all commands returned 0</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">__toString()</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Get string representation of batch</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="properties">Properties</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">$silenceErrors</code></td>
+      <td><code class="language-plaintext highlighter-rouge">bool</code></td>
+      <td>Whether to silence errors</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">$stopOnFailure</code></td>
+      <td><code class="language-plaintext highlighter-rouge">bool</code></td>
+      <td>Whether to stop on first failure</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="namespace-efraneconsoleadditionsoutput">Namespace: <code class="language-plaintext highlighter-rouge">EFrane\ConsoleAdditions\Output</code></h2>
+
+<h3 id="output-classes">Output Classes</h3>
+
+<h4 id="fileoutputinterface">FileOutputInterface</h4>
+
+<p>Interface for all file-based outputs.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">interface</span> <span class="nc">FileOutputInterface</span> <span class="kd">extends</span> <span class="nc">OutputInterface</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">getPath</span><span class="p">():</span> <span class="kt">string</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="nativefileoutput">NativeFileOutput</h4>
+
+<p>Output that writes to a file using PHP’s native file functions.</p>
+
+<p><strong>Class:</strong> <code class="language-plaintext highlighter-rouge">EFrane\ConsoleAdditions\Output\NativeFileOutput</code></p>
+
+<p><strong>Constants:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">MODE_OVERWRITE = 0</code> - Overwrite existing file</li>
+  <li><code class="language-plaintext highlighter-rouge">MODE_APPEND = 1</code> - Append to existing file</li>
+</ul>
+
+<p><strong>Constructor:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">NativeFileOutput</span><span class="o">::</span><span class="nf">__construct</span><span class="p">(</span><span class="n">string</span> <span class="nv">$path</span><span class="p">,</span> <span class="n">int</span> <span class="nv">$mode</span> <span class="o">=</span> <span class="k">self</span><span class="o">::</span><span class="no">MODE_OVERWRITE</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Methods:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">getPath</span><span class="p">()</span><span class="o">:</span> <span class="n">string</span>    <span class="c1">// Get the file path</span>
+<span class="nf">getMode</span><span class="p">()</span><span class="o">:</span> <span class="n">int</span>       <span class="c1">// Get the write mode</span>
+</code></pre></div></div>
+
+<h4 id="flysystemfileoutput">FlysystemFileOutput</h4>
+
+<p>Output that writes to a Flysystem adapter.</p>
+
+<p><strong>Class:</strong> <code class="language-plaintext highlighter-rouge">EFrane\ConsoleAdditions\Output\FlysystemFileOutput</code></p>
+
+<p><strong>Constructor:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">FlysystemFileOutput</span><span class="o">::</span><span class="nf">__construct</span><span class="p">(</span><span class="nc">FilesystemInterface</span> <span class="nv">$filesystem</span><span class="p">,</span> <span class="n">string</span> <span class="nv">$path</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="multiplexedoutput">MultiplexedOutput</h4>
+
+<p>Output that writes to multiple outputs simultaneously.</p>
+
+<p><strong>Class:</strong> <code class="language-plaintext highlighter-rouge">EFrane\ConsoleAdditions\Output\MultiplexedOutput</code></p>
+
+<p><strong>Constructor:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">MultiplexedOutput</span><span class="o">::</span><span class="nf">__construct</span><span class="p">(</span><span class="k">array</span> <span class="nv">$outputs</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Methods:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">addOutput</span><span class="p">(</span><span class="nc">OutputInterface</span> <span class="nv">$output</span><span class="p">)</span><span class="o">:</span> <span class="k">self</span>
+<span class="nf">getOutputs</span><span class="p">()</span><span class="o">:</span> <span class="k">array</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="namespace-efraneconsoleadditionsbatch">Namespace: <code class="language-plaintext highlighter-rouge">EFrane\ConsoleAdditions\Batch</code></h2>
+
+<h3 id="action-interface">Action Interface</h3>
+
+<p>Base interface for all batch actions.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">interface</span> <span class="nc">Action</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">getName</span><span class="p">():</span> <span class="kt">string</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">setOutput</span><span class="p">(</span><span class="kt">OutputInterface</span> <span class="nv">$output</span><span class="p">):</span> <span class="kt">void</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">execute</span><span class="p">(</span><span class="kt">SymfonyStyle</span> <span class="nv">$io</span><span class="p">):</span> <span class="kt">int</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="action-types">Action Types</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Class</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">StringCommandAction</code></td>
+      <td>Executes a command by name</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">InstanceCommandAction</code></td>
+      <td>Executes a Command instance</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ShellAction</code></td>
+      <td>Executes a shell command</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ProcessAction</code></td>
+      <td>Executes a Symfony Process</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MessageAction</code></td>
+      <td>Outputs a message</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="stringcommandaction">StringCommandAction</h4>
+
+<p><strong>Constructor:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">StringCommandAction</span><span class="o">::</span><span class="nf">__construct</span><span class="p">(</span><span class="n">string</span> <span class="nv">$commandName</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="instancecommandaction">InstanceCommandAction</h4>
+
+<p><strong>Constructor:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">InstanceCommandAction</span><span class="o">::</span><span class="nf">__construct</span><span class="p">(</span><span class="nc">Command</span> <span class="nv">$command</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$arguments</span> <span class="o">=</span> <span class="p">[])</span>
+</code></pre></div></div>
+
+<h4 id="shellaction">ShellAction</h4>
+
+<p><strong>Constructor:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ShellAction</span><span class="o">::</span><span class="nf">__construct</span><span class="p">(</span><span class="n">string</span> <span class="nv">$command</span><span class="p">,</span> <span class="o">?</span><span class="nc">Closure</span> <span class="nv">$callback</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span> <span class="o">?</span><span class="nc">SymfonyStyle</span> <span class="nv">$io</span> <span class="o">=</span> <span class="kc">null</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="processaction">ProcessAction</h4>
+
+<p><strong>Constructor:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ProcessAction</span><span class="o">::</span><span class="nf">__construct</span><span class="p">(</span><span class="nc">Process</span> <span class="nv">$process</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="messageaction">MessageAction</h4>
+
+<p><strong>Constructor:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">MessageAction</span><span class="o">::</span><span class="nf">__construct</span><span class="p">(</span><span class="n">string</span> <span class="nv">$message</span><span class="p">,</span> <span class="n">string</span> <span class="nv">$type</span> <span class="o">=</span> <span class="s1">'info'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Message types: <code class="language-plaintext highlighter-rouge">info</code>, <code class="language-plaintext highlighter-rouge">comment</code>, <code class="language-plaintext highlighter-rouge">question</code>, <code class="language-plaintext highlighter-rouge">success</code>, <code class="language-plaintext highlighter-rouge">warning</code>, <code class="language-plaintext highlighter-rouge">error</code></p>
+
+<hr />
+
+<h2 id="namespace-efraneconsoleadditionsexception">Namespace: <code class="language-plaintext highlighter-rouge">EFrane\ConsoleAdditions\Exception</code></h2>
+
+<h3 id="exception-classes">Exception Classes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Class</th>
+      <th>Extends</th>
+      <th>Thrown When</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BatchException</code></td>
+      <td><code class="language-plaintext highlighter-rouge">\RuntimeException</code></td>
+      <td>Batch command fails and errors not silenced</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MultiplexedOutputException</code></td>
+      <td><code class="language-plaintext highlighter-rouge">\RuntimeException</code></td>
+      <td>Error writing to multiplexed output</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">FileOutputException</code></td>
+      <td><code class="language-plaintext highlighter-rouge">\RuntimeException</code></td>
+      <td>Error in file output operations</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="batchexception-methods">BatchException Methods</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">getCommand</span><span class="p">()</span><span class="o">:</span> <span class="o">?</span><span class="n">string</span>    <span class="c1">// Get the failed command name</span>
+<span class="nf">getReturnCode</span><span class="p">()</span><span class="o">:</span> <span class="o">?</span><span class="n">int</span>     <span class="c1">// Get the exit code</span>
+<span class="nf">getPrevious</span><span class="p">()</span><span class="o">:</span> <span class="o">?</span><span class="nc">Throwable</span> <span class="c1">// Get previous exception</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="namespace-efraneconsoleadditionsbatch-1">Namespace: <code class="language-plaintext highlighter-rouge">EFrane\ConsoleAdditions\Batch</code></h2>
+
+<h3 id="returncodestack">ReturnCodeStack</h3>
+
+<p>Manages the collection of return codes from executed commands.</p>
+
+<p><strong>Class:</strong> <code class="language-plaintext highlighter-rouge">EFrane\ConsoleAdditions\Batch\ReturnCodeStack</code></p>
+
+<p><strong>Methods:</strong></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">push</span><span class="p">(</span><span class="n">int</span> <span class="nv">$returnCode</span><span class="p">)</span><span class="o">:</span> <span class="n">void</span>
+<span class="nf">pop</span><span class="p">()</span><span class="o">:</span> <span class="n">int</span>
+<span class="nf">peek</span><span class="p">()</span><span class="o">:</span> <span class="n">int</span>
+<span class="nf">all</span><span class="p">()</span><span class="o">:</span> <span class="k">array</span>
+<span class="nf">isEmpty</span><span class="p">()</span><span class="o">:</span> <span class="n">bool</span>
+<span class="nb">count</span><span class="p">()</span><span class="o">:</span> <span class="n">int</span>
+</code></pre></div></div>
+
+        </article>
+    </div>
+    
+    <footer>
+    <p>MIT Licensed | Copyright &copy; 2017-present Stefan "eFrane" Graupner</p>
+</footer>
+
+</body>
+</html>

@@ -1,62 +1,107 @@
 <!DOCTYPE html>
-<html lang="en-US">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Getting started | Console Additions</title>
-    <meta name="generator" content="VuePress 1.9.9">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Missing tools for the 20% - Helper Classes for Symfony Console">
+    <title>Getting Started</title>
+    <link rel="stylesheet" href="/assets/styles.css">
     
-    <meta name="description" content="Additions for the Symfony Console Component">
+    <link rel="canonical" href="https://symfony-console-additions.efrane.com/quickstart.html">
     
-    <link rel="preload" href="/assets/css/0.styles.e8e4f3a3.css" as="style"><link rel="preload" href="/assets/js/app.79e4fa38.js" as="script"><link rel="preload" href="/assets/js/2.204971b5.js" as="script"><link rel="preload" href="/assets/js/8.da6e73c9.js" as="script"><link rel="prefetch" href="/assets/js/3.0d5d3502.js"><link rel="prefetch" href="/assets/js/4.dc073781.js"><link rel="prefetch" href="/assets/js/5.51775994.js"><link rel="prefetch" href="/assets/js/6.b265c589.js"><link rel="prefetch" href="/assets/js/7.0b63b183.js">
-    <link rel="stylesheet" href="/assets/css/0.styles.e8e4f3a3.css">
-  </head>
-  <body>
-    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">Console Additions</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">
-  Home
-</a></div> <a href="https://github.com/eFrane/ConsoleAdditions" target="_blank" rel="noopener noreferrer" class="repo-link">
-    GitHub
-    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">
-  Home
-</a></div> <a href="https://github.com/eFrane/ConsoleAdditions" target="_blank" rel="noopener noreferrer" class="repo-link">
-    GitHub
-    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>Getting started</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/quickstart.html#command-batches" class="sidebar-link">Command Batches</a><ul class="sidebar-sub-headers"></ul></li><li><a href="/quickstart.html#output-extensions" class="sidebar-link">Output Extensions</a><ul class="sidebar-sub-headers"></ul></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="getting-started"><a href="#getting-started" class="header-anchor">#</a> Getting started</h1> <h2 id="command-batches"><a href="#command-batches" class="header-anchor">#</a> Command Batches</h2> <p>This package provides a way to batch up a series of commands (and other things).
+</head>
+<body>
+    <header>
+    <div class="container">
+        <a href="/" class="site-title">Console Additions</a>
+        <nav class="main-nav">
+            <a href="/">Home</a>
+            <a href="/installation.html">Install</a>
+            <a href="/quickstart.html">Quick Start</a>
+            <a href="/api-reference.html">API</a>
+        </nav>
+    </div>
+</header>
+
+    
+    <div class="main-content">
+        <aside class="sidebar">
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/installation.html">Installation</a></li>
+            <li><a href="/quickstart.html">Quick Start</a></li>
+        </ul>
+        <h4>Core Features</h4>
+        <ul>
+            <li><a href="/batch-features.html">Batch Features</a></li>
+            <li><a href="/action-types.html">Action Types</a></li>
+            <li><a href="/output-extensions.html">Output Extensions</a></li>
+        </ul>
+        <h4>Advanced</h4>
+        <ul>
+            <li><a href="/use-cases.html">Use Cases</a></li>
+            <li><a href="/error-handling.html">Error Handling</a></li>
+            <li><a href="/api-reference.html">API Reference</a></li>
+        </ul>
+    </nav>
+</aside>
+
+        <article>
+            <h2 id="command-batches">Command Batches</h2>
+
+<p>This package provides a way to batch up a series of commands (and other things).
 The main purpose of this is separating configuration of a command chain from
 running it. It is also possible to print a more or less shell-script like version
-of the configured command batch.</p> <div class="language-php extra-class"><pre class="language-php"><code><span class="token keyword">use</span> <span class="token package"><span class="token punctuation">\</span>EFrane<span class="token punctuation">\</span>ConsoleAdditions<span class="token punctuation">\</span>Command<span class="token punctuation">\</span>Batch</span><span class="token punctuation">;</span>
+of the configured command batch.</p>
 
-<span class="token keyword">class</span> <span class="token class-name-definition class-name">MyBatchingCommand</span> <span class="token keyword">extends</span> <span class="token class-name">Command</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function-definition function">execute</span><span class="token punctuation">(</span><span class="token class-name type-declaration">InputInterface</span> <span class="token variable">$input</span><span class="token punctuation">,</span> <span class="token class-name type-declaration">OutputInterface</span> <span class="token variable">$output</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token comment">// ...</span>
-        
-        <span class="token comment">// configure a batch</span>
-        <span class="token variable">$batch</span> <span class="token operator">=</span> <span class="token class-name static-context">Batch</span><span class="token operator">::</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-&gt;</span><span class="token function">getApplication</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token variable">$output</span><span class="token punctuation">)</span>
-            <span class="token operator">-&gt;</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'my:command --with-option'</span><span class="token punctuation">)</span>
-            <span class="token operator">-&gt;</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'my:other:command for this input'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        
-        <span class="token comment">// print it's contents</span>
-        <span class="token variable">$output</span><span class="token operator">-&gt;</span><span class="token function">writeln</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword type-casting">string</span><span class="token punctuation">)</span><span class="token variable">$batch</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        
-        <span class="token comment">// and run it</span>
-        <span class="token variable">$batch</span><span class="token operator">-&gt;</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h2 id="output-extensions"><a href="#output-extensions" class="header-anchor">#</a> Output Extensions</h2> <p>There are a few output extensions provided which mainly focus on making
-the output of commands persistable.</p> <div class="language-php extra-class"><pre class="language-php"><code><span class="token keyword">use</span> <span class="token package"><span class="token punctuation">\</span>EFrane<span class="token punctuation">\</span>ConsoleAdditions<span class="token punctuation">\</span>Output<span class="token punctuation">\</span>MultiplexedOutput</span><span class="token punctuation">;</span>
-<span class="token keyword">use</span> <span class="token package"><span class="token punctuation">\</span>EFrane<span class="token punctuation">\</span>ConsoleAdditions<span class="token punctuation">\</span>Output<span class="token punctuation">\</span>NativeFileOutput</span><span class="token punctuation">;</span>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Command\Batch</span><span class="p">;</span>
 
-<span class="token keyword">class</span> <span class="token class-name-definition class-name">MyLoggingCommand</span> <span class="token keyword">extends</span> <span class="token class-name">Command</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function-definition function">execute</span><span class="token punctuation">(</span><span class="token class-name type-declaration">InputInterface</span> <span class="token variable">$input</span><span class="token punctuation">,</span> <span class="token class-name type-declaration">OutputInterface</span> <span class="token variable">$output</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token comment">// send output to multiple destinations:</span>
-        <span class="token variable">$output</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MultiplexedOutput</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
-            <span class="token comment">// 1: the default output of the command</span>
-            <span class="token variable">$output</span><span class="token punctuation">,</span>
-            <span class="token comment">// 2: the file command.log in the current working directory </span>
-            <span class="token keyword">new</span> <span class="token class-name">NativeFileOutput</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'command.log'</span><span class="token punctuation">)</span>
-        <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/eFrane/ConsoleAdditions/edit/master/quickstart.md" target="_blank" rel="noopener noreferrer">Edit this page</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
-    <script src="/assets/js/app.79e4fa38.js" defer></script><script src="/assets/js/2.204971b5.js" defer></script><script src="/assets/js/8.da6e73c9.js" defer></script>
-  </body>
+<span class="kd">class</span> <span class="nc">MyBatchingCommand</span> <span class="kd">extends</span> <span class="nc">Command</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">execute</span><span class="p">(</span><span class="kt">InputInterface</span> <span class="nv">$input</span><span class="p">,</span> <span class="kt">OutputInterface</span> <span class="nv">$output</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// ...</span>
+        
+        <span class="c1">// configure a batch</span>
+        <span class="nv">$batch</span> <span class="o">=</span> <span class="nc">Batch</span><span class="o">::</span><span class="nf">create</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">getApplication</span><span class="p">(),</span> <span class="nv">$output</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'my:command --with-option'</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="nf">add</span><span class="p">(</span><span class="s1">'my:other:command for this input'</span><span class="p">);</span>
+        
+        <span class="c1">// print it's contents</span>
+        <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">((</span><span class="n">string</span><span class="p">)</span><span class="nv">$batch</span><span class="p">);</span>
+        
+        <span class="c1">// and run it</span>
+        <span class="nv">$batch</span><span class="o">-&gt;</span><span class="nf">run</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="output-extensions">Output Extensions</h2>
+
+<p>There are a few output extensions provided which mainly focus on making
+the output of commands persistable.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Output\MultiplexedOutput</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nc">EFrane\ConsoleAdditions\Output\NativeFileOutput</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nc">MyLoggingCommand</span> <span class="kd">extends</span> <span class="nc">Command</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">execute</span><span class="p">(</span><span class="kt">InputInterface</span> <span class="nv">$input</span><span class="p">,</span> <span class="kt">OutputInterface</span> <span class="nv">$output</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// send output to multiple destinations:</span>
+        <span class="nv">$output</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MultiplexedOutput</span><span class="p">([</span>
+            <span class="c1">// 1: the default output of the command</span>
+            <span class="nv">$output</span><span class="p">,</span>
+            <span class="c1">// 2: the file command.log in the current working directory </span>
+            <span class="k">new</span> <span class="nc">NativeFileOutput</span><span class="p">(</span><span class="s1">'command.log'</span><span class="p">)</span>
+        <span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+        </article>
+    </div>
+    
+    <footer>
+    <p>MIT Licensed | Copyright &copy; 2017-present Stefan "eFrane" Graupner</p>
+</footer>
+
+</body>
 </html>
