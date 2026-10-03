@@ -114,10 +114,7 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
         }
     }
 
-    /**
-     * @return bool
-     */
-    protected function shouldDoWriteImmediate()
+    protected function shouldDoWriteImmediate(): bool
     {
         return 0 === $this->debounceMilliseconds;
     }
@@ -125,9 +122,8 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
     /**
      * @param string $message
      * @param bool $newline
-     * @return void
      */
-    protected function storeMessageForDebouncedWrite(string $message, bool $newline)
+    protected function storeMessageForDebouncedWrite(string $message, bool $newline): void
     {
         array_push($this->debounceMessageCache, compact('message', 'newline'));
     }
