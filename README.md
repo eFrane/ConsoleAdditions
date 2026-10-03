@@ -88,3 +88,22 @@ A simple setup inside might look like this:
         }
     }
 ```
+
+## Development
+
+### Testing the documentation
+
+To test the documentation, use any container runner or a locally installed 
+Jekyll for building. Then start any local http server, like Pythons http.server
+for previewing.
+
+E.g. for macOS:
+
+```bash
+# building
+container run --rm -v $(pwd)/docs:/srv/jekyll docker.io/jekyll/jekyll:latest \
+  jekyll build --source /srv/jekyll --destination /srv/jekyll/_site
+
+# previewing
+python3 -m http.server -d docs/_site
+```
