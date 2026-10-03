@@ -3,3 +3,4 @@ composer.lock
 node_modules
 .phpunit.result.cache
 /docs/_site
+/docs/.jekyll-cache
