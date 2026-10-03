@@ -2,12 +2,14 @@
 
 ## UNRELEASED
 
-- **BREAKING**: Drop support for PHP <8.2
+## 0.9.0
+
+- **BC BREAK**: Drop support for PHP <8.2
 - Add Symfony 7 support: update composer.json to allow symfony/console and symfony/process ^7.0, add compatible type declarations to overrides
 - Bump phpstan/phpstan from ^1.0.0 to ^2.0.0 and fix all level 8 static analysis errors
 - Add native PHP type declarations to properties and methods, replacing PHPDoc where possible
 - Update parameter types to be explicitly nullable for PHP 8.4 compatibility
-- Update docs dependencies: express 4.21.0, elliptic 6.6.0, cross-spawn 6.0.6, nanoid 3.3.8
+- Converted docs to Jekyll for easier docs maintenance
 
 ## 0.8.1
 
