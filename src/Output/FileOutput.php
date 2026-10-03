@@ -140,6 +140,15 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
     }
 
     /**
+     * Check if writing message and optional newline to the stream fails.
+     */
+    private function streamWritesFailed(string $message, bool $newline): bool
+    {
+        return false === @fwrite($this->getStream(), $message)
+            || ($newline && false === @fwrite($this->getStream(), PHP_EOL));
+    }
+
+    /**
      * Since the whole point of debouncing writes is to be conservative
      * about disk writes, this cannot simply call the upstream
      * `doWrite` implementation as that flushes after each write. It
@@ -152,9 +161,7 @@ abstract class FileOutput extends StreamOutput implements FileOutputInterface
             list($message, $newline) = array_values(array_shift($this->debounceMessageCache));
 
             // this is basically StreamOutput::doWrite but oh well
-            if (is_null($this->writeCallback)
-                && false === @fwrite($this->getStream(), $message)
-                || ($newline && (false === @fwrite($this->getStream(), PHP_EOL)))) {
+            if (is_null($this->writeCallback) && $this->streamWritesFailed($message, $newline)) {
                 // should never happen
                 throw new \RuntimeException('Unable to write output.');
             }
